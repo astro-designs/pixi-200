@@ -1,0 +1,60 @@
+# Xilinx / ISE
+*.bak
+*.ngm
+*.ngd
+*.ngc
+*.ncd
+*.xrpt
+*.syr
+*.twx
+*.twr
+*.cmd_log
+*.pcf
+*_usage.xml
+*.mrp
+*.ptwx
+*.csv
+*.pad
+*_envsettings.html
+*.gise
+*summary.html
+*.par
+*.bgn
+webtalk_pn.xml
+*_map.map
+*.bld
+*.xst
+webtalk.log
+*_vhdl.prj
+*.ut
+*_summary.xml
+*_bitgen.xwbt
+*.prj
+*.unroutes
+*.xpi
+*.lso
+*.stx
+_ngo
+_xmsgs
+iseconfig
+templates
+tmp
+xlnx_auto*
+xst
+
+
+# Thumbnails
+._*
+
+# File that might appear on external disk
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin
+$RECYCLE.BIN/
+
