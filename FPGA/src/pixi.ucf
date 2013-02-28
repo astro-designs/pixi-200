@@ -1,0 +1,195 @@
+# Misc Config
+CONFIG VCCAUX=3.3;
+
+
+# TIMING
+NET "PI_SCK" TNM_NET = PI_SCK_TNM;
+TIMESPEC TS_PI_SCK = PERIOD PI_SCK_TNM 4 MHz HIGH 50 % INPUT_JITTER 100 ps;
+
+NET "PI_SPI_SCLK" TNM_NET = PI_SPI_SCLK_TNM;
+TIMESPEC TS_PI_SPI_SCLK = PERIOD PI_SPI_SCLK_TNM 32 MHz HIGH 50 % INPUT_JITTER 100 ps;
+
+NET "PI_GPIO_GCLK" TNM_NET = PI_GPIO_GCLK_TNM;
+TIMESPEC TS_PI_GPIO_GCLK = PERIOD PI_GPIO_GCLK_TNM 20 MHz HIGH 50 % INPUT_JITTER 100 ps;
+
+NET "CLK0" TNM_NET = CLK0_TNM;
+TIMESPEC TS_CLK0 = PERIOD CLK0_TNM 33 MHz HIGH 50 % INPUT_JITTER 100 ps;
+
+NET "exp_clk" TNM_NET = exp_clk_TNM;
+TIMESPEC TS_exp_clk = PERIOD exp_clk_TNM 125 MHz HIGH 50 % INPUT_JITTER 100 ps;
+
+
+# PI_GPIO
+NET "PI_GPIO_GEN<0>"	   LOC = "R14"	 | IOSTANDARD = "LVCMOS33";  # CCLK (Dual-function)
+NET "PI_GPIO_GEN<1>"	   LOC = "T14"	 | IOSTANDARD = "LVCMOS33";  # D0 (Dual-function)
+NET "PI_GPIO_GEN<2>"	   LOC = "T12"	 | IOSTANDARD = "LVTTL";     # INIT (Dual-function)
+NET "PI_GPIO_GEN<3>"	   LOC = "F16"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_GPIO_GEN<4>"	   LOC = "G14"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_GPIO_GEN<5>"	   LOC = "H15"	 | IOSTANDARD = "LVCMOS33";
+#NET "PI_GPIO_GEN<6>"	 LOC = "H15"	| IOSTANDARD = "LVCMOS33"; # PROG
+NET "PI_GPIO_GEN<7>"	   LOC = "J16"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_GPIO_GEN<8>"	   LOC = "K14"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_GPIO_GEN<9>"	   LOC = "K15"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_GPIO_GEN<10>"	LOC = "K16"	 | IOSTANDARD = "LVCMOS33";
+
+# PI I2C
+NET "PI_SCK"            LOC = "B8" 	 | IOSTANDARD = "LVCMOS33" | PULLUP; # MUST BE A GCLK PIN (need to change this pin)
+NET "PI_SDA"            LOC = "E14"  | IOSTANDARD = "LVCMOS33" | PULLUP;
+
+# PI_SPI
+NET "PI_SPI_MOSI" 	   LOC = "G16"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_SPI_MISO" 	   LOC = "H14"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_SPI_CE0_N" 	   LOC = "H16"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_SPI_CE1_N" 	   LOC = "J14"	 | IOSTANDARD = "LVCMOS33";
+NET "PI_SPI_SCLK" 	   LOC = "D8"	 | IOSTANDARD = "LVCMOS33"; # MUST BE A GCLK PIN
+
+# Pi Clock
+NET "PI_GPIO_GCLK"	   LOC = "A8"	 | IOSTANDARD = "LVTTL"; # MUST BE A GCLK PIN
+
+# Pi Serial
+NET "PI_TXD0"           LOC = "F14"  | IOSTANDARD = "LVCMOS33";
+NET "PI_RXD0"           LOC = "F15"  | IOSTANDARD = "LVCMOS33";
+
+# Clock (33MHz)
+NET "CLK0"              LOC = "C8"   | IOSTANDARD = "LVCMOS33"; # MUST BE A GCLK PIN
+
+
+#      -- GPIO 1, 2 & 3
+NET "GPIO1<0>"           LOC = "H1" | DRIVE=12; # GPIO1 Drive current max = 12mA
+NET "GPIO1<1>"           LOC = "G2" | DRIVE=12;
+NET "GPIO1<2>"           LOC = "J3" | DRIVE=12;
+NET "GPIO1<3>"           LOC = "H3" | DRIVE=12;
+NET "GPIO1<4>"           LOC = "J1" | DRIVE=12;
+NET "GPIO1<5>"           LOC = "J2" | DRIVE=12;
+NET "GPIO1<6>"           LOC = "K1" | DRIVE=12;
+NET "GPIO1<7>"           LOC = "K3" | DRIVE=12;
+NET "GPIO1<8>"           LOC = "L2" | DRIVE=12;
+NET "GPIO1<9>"           LOC = "L1" | DRIVE=12;
+NET "GPIO1<10>"          LOC = "J6" | DRIVE=12;
+NET "GPIO1<11>"          LOC = "J4" | DRIVE=12;
+NET "GPIO1<12>"          LOC = "L3" | DRIVE=12;
+NET "GPIO1<13>"          LOC = "K4" | DRIVE=12;
+NET "GPIO1<14>"          LOC = "L4" | DRIVE=12;
+NET "GPIO1<15>"          LOC = "M3" | DRIVE=12;
+NET "GPIO1<16>"          LOC = "N1" | DRIVE=12 | PULLDOWN; # Needed for keypad matrix (if used, otherwise no pull down is necessary)
+NET "GPIO1<17>"          LOC = "M1" | DRIVE=12 | PULLDOWN; # Needed for keypad matrix (if used, otherwise no pull down is necessary)
+NET "GPIO1<18>"          LOC = "P1" | DRIVE=12 | PULLDOWN; # Needed for keypad matrix (if used, otherwise no pull down is necessary)
+NET "GPIO1<19>"          LOC = "N2" | DRIVE=12 | PULLDOWN; # Needed for keypad matrix (if used, otherwise no pull down is necessary)
+NET "GPIO1<20>"          LOC = "P2" | DRIVE=12;
+NET "GPIO1<21>"          LOC = "R1" | DRIVE=12;
+NET "GPIO1<22>"          LOC = "M4" | DRIVE=12;
+NET "GPIO1<23>"          LOC = "N3" | DRIVE=12;
+
+NET "GPIO2<0>"           LOC = "R5";
+NET "GPIO2<1>"           LOC = "T4";
+NET "GPIO2<2>"           LOC = "P6";
+NET "GPIO2<3>"           LOC = "N7";
+NET "GPIO2<4>"           LOC = "T10";
+NET "GPIO2<5>"           LOC = "T11";
+NET "GPIO2<6>"           LOC = "T7";
+NET "GPIO2<7>"           LOC = "R7";
+NET "GPIO2<8>"           LOC = "P9"; #"T8";
+NET "GPIO2<9>"           LOC = "N9"; #"P8";
+NET "GPIO2<10>"          LOC = "T8"; #"P9";
+NET "GPIO2<11>"          LOC = "P8"; #"N9";
+NET "GPIO2<12>"          LOC = "T9";
+NET "GPIO2<13>"          LOC = "R9";
+NET "GPIO2<14>"          LOC = "N10";
+NET "GPIO2<15>"          LOC = "N11";
+
+NET "GPIO3<0>"           LOC = "C1";
+NET "GPIO3<1>"           LOC = "C2";
+NET "GPIO3<2>"           LOC = "D3";
+NET "GPIO3<3>"           LOC = "D4";
+NET "GPIO3<4>"           LOC = "E1";
+NET "GPIO3<5>"           LOC = "D1";
+NET "GPIO3<6>"           LOC = "E2";
+NET "GPIO3<7>"           LOC = "E3";
+NET "GPIO3<8>"           LOC = "G4";
+NET "GPIO3<9>"           LOC = "F3";
+NET "GPIO3<10>"          LOC = "G1";
+NET "GPIO3<11>"          LOC = "F1";
+NET "GPIO3<12>"          LOC = "H4";
+NET "GPIO3<13>"          LOC = "G3";
+NET "GPIO3<14>"          LOC = "H5";
+NET "GPIO3<15>"          LOC = "H6";
+NET "GPIO3_OE<0>"        LOC = "P5";
+NET "GPIO3_TR<0>"        LOC = "N6";
+NET "GPIO3_OE<1>"        LOC = "T3";
+NET "GPIO3_TR<1>"        LOC = "T2";
+
+NET "GPIO1*" IOSTANDARD = "LVCMOS33";
+NET "GPIO2*" IOSTANDARD = "LVCMOS33";
+NET "GPIO3*" IOSTANDARD = "LVCMOS33";
+
+
+# LEDs & Switches
+NET "LED<1>"             LOC = "B14"  | IOSTANDARD = "LVCMOS33";
+NET "LED<2>"             LOC = "D10"  | IOSTANDARD = "LVCMOS33";
+NET "LED<3>"             LOC = "C11"  | IOSTANDARD = "LVCMOS33";
+NET "LED<4>"             LOC = "D9"   | IOSTANDARD = "LVCMOS33";
+NET "LED<5>"             LOC = "B4"   | IOSTANDARD = "LVCMOS33";
+NET "LED<6>"             LOC = "A4"   | IOSTANDARD = "LVCMOS33";
+NET "LED<7>"             LOC = "B3"   | IOSTANDARD = "LVCMOS33";
+NET "LED<8>"             LOC = "A3"   | IOSTANDARD = "LVCMOS33";
+
+NET "SW<1>"              LOC = "D12"  | IOSTANDARD = "LVCMOS33";
+NET "SW<2>"              LOC = "A11"  | IOSTANDARD = "LVCMOS33";
+NET "SW<3>"              LOC = "C10"  | IOSTANDARD = "LVCMOS33";
+NET "SW<4>"              LOC = "D6"   | IOSTANDARD = "LVCMOS33";
+
+#      -- RS232 level shift
+NET "SIN"                LOC = "L13" | IOSTANDARD = "LVCMOS33";
+NET "SOUT"               LOC = "N14" | IOSTANDARD = "LVCMOS33";
+NET "CTS"                LOC = "N13" | IOSTANDARD = "LVCMOS33";
+NET "RTS"                LOC = "M13" | IOSTANDARD = "LVCMOS33";
+
+#      -- EEPROM
+NET "EESDA"              LOC = "P13" | IOSTANDARD = "LVCMOS33";
+NET "EESDC"              LOC = "P11" | IOSTANDARD = "LVCMOS33";
+
+#      -- ADC
+NET "ADC_SCK"            LOC = "N16" | IOSTANDARD = "LVCMOS33";
+NET "ADC_MOSI"           LOC = "P15" | IOSTANDARD = "LVCMOS33"; # Connects to ADC DIN
+NET "ADC_MISO"           LOC = "P16" | IOSTANDARD = "LVCMOS33"; # Connects to ADC DOUT
+NET "ADC_CS_N"           LOC = "R15" | IOSTANDARD = "LVCMOS33";
+
+#      -- DAC
+NET "DAC_SCK"            LOC = "L16" | IOSTANDARD = "LVCMOS33";
+NET "DAC_SDA"            LOC = "M16" | IOSTANDARD = "LVCMOS33";
+NET "DAC_LDAC"           LOC = "L14" | IOSTANDARD = "LVCMOS33";
+NET "DAC_RDY"            LOC = "M15" | IOSTANDARD = "LVCMOS33";
+
+#      -- 3-Axis Accelerometer
+NET "MMA_SCK"            LOC = "C16" | IOSTANDARD = "LVCMOS33";
+NET "MMA_SDA"            LOC = "C15" | IOSTANDARD = "LVCMOS33";
+NET "MMA_INT"            LOC = "D16" | IOSTANDARD = "LVCMOS33";
+      
+#      -- 3-Axis Magnetometer
+NET "MAG_SCK"            LOC = "E16" | IOSTANDARD = "LVCMOS33";
+NET "MAG_SDA"            LOC = "D15" | IOSTANDARD = "LVCMOS33";
+NET "MAG_INT"            LOC = "D14" | IOSTANDARD = "LVCMOS33";
+
+# Expansion
+NET "EXP_IP<0>"            LOC = "A14"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IN<0>"            LOC = "A13"  | IOSTANDARD = "LVDS_33";
+
+NET "EXP_IP<1>"            LOC = "D13"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IN<1>"            LOC = "C13"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IP<2>"            LOC = "B12"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IN<2>"            LOC = "A12"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IP<3>"            LOC = "C12"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IN<3>"            LOC = "D11"  | IOSTANDARD = "LVDS_33";
+NET "EXP_IP<4>"            LOC = "C9"   | IOSTANDARD = "LVDS_33"; # MUST BE A GCLK PIN (P)
+NET "EXP_IN<4>"            LOC = "A9"   | IOSTANDARD = "LVDS_33"; # MUST BE A GCLK PIN (N)
+
+NET "EXP_OP<5>"            LOC = "B10"  | IOSTANDARD = "LVDS_33";
+NET "EXP_ON<5>"            LOC = "A10"  | IOSTANDARD = "LVDS_33";
+NET "EXP_OP<6>"            LOC = "A7"  | IOSTANDARD = "LVDS_33";
+NET "EXP_ON<6>"            LOC = "C7"  | IOSTANDARD = "LVDS_33";
+NET "EXP_OP<7>"            LOC = "D7"  | IOSTANDARD = "LVDS_33";
+NET "EXP_ON<7>"            LOC = "C6"  | IOSTANDARD = "LVDS_33";
+NET "EXP_OP<8>"            LOC = "A6"  | IOSTANDARD = "LVDS_33";
+NET "EXP_ON<8>"            LOC = "B6"  | IOSTANDARD = "LVDS_33";
+NET "EXP_OP<9>"            LOC = "A5"  | IOSTANDARD = "LVDS_33";
+NET "EXP_ON<9>"            LOC = "C5"  | IOSTANDARD = "LVDS_33";
