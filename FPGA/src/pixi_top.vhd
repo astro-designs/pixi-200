@@ -16,7 +16,7 @@ use work.build_time_pkg.all;
 ENTITY pixi IS
    GENERIC (
       -- Compile options...
-      DEMO_BUILD             : std_logic_vector(15 downto 0) := X"0005"; -- Non-zero values indicate demo build & position in demo sequence
+      DEMO_BUILD             : std_logic_vector(15 downto 0) := X"0000"; -- Non-zero values indicate demo build & position in demo sequence
       DEFAULT_I2C_ADDRESS    : std_logic_vector(7 downto 0) := X"70"; -- Default I2C address (A7..A1) of bits (7..0) of the slave address byte
       DEFAULT_SPI_FPGA_CH    : std_logic := '0'; -- Sets the default SPI channel number for the FPGA's SPI interface
       DEFAULT_SPI_MCP3204_CH : std_logic := '1'; -- Sets the default SPI channel number for the ADC
