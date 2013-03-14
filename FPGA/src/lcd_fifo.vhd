@@ -1,3 +1,7 @@
+-- LCD FIFO
+-- Astro Designs Ltd.
+-- $Id:$
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
@@ -28,11 +32,10 @@ architecture rtl of lcd_fifo is
 
 signal ram  : t_slv16_vector(0 to DEPTH-1) := LCD_INIT(0 to DEPTH-1);
 signal rdata : std_logic_vector(WIDTH-1 downto 0);
-signal write_counter : integer range DEPTH-1 downto 0 := PREPROG_LEVEL;
-signal read_counter : integer range DEPTH-1 downto 0 := 0;
-signal fifo_level : integer range DEPTH-1 downto 0 := PREPROG_LEVEL;
-signal ram_read : integer range DEPTH-1 downto 0;
-signal fifo_full : std_logic;
+signal write_counter : integer range 0 to DEPTH-1 := PREPROG_LEVEL;
+signal read_counter : integer range 0 to DEPTH-1 := 0;
+signal fifo_level : integer range 0 to DEPTH := PREPROG_LEVEL;
+signal ram_read : integer range 0 to DEPTH-1 := 0;
 
 begin
 

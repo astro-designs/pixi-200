@@ -1,3 +1,7 @@
+-- Common type definitions VHDL package
+-- Astro Designs Ltd.
+-- $Id:$
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 

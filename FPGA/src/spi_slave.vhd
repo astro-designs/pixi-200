@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_misc.all;
+-- $Id:$
 
 entity spi_slave is
    generic (
@@ -71,7 +72,7 @@ begin
       elsif rising_edge(spi_clk_int) then
 
          if spi_phase = ADDR_WIDTH+1 then -- Register the read bit
---            ren_i <= spi_mosi;
+            ren_i <= spi_mosi;
             ren <= spi_mosi;
          end if;
 

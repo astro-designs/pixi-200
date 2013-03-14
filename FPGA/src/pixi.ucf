@@ -1,3 +1,7 @@
+# PiXi-200 FPGA Constraints File
+# Astro Designs Ltd.
+# $Id:$
+
 # Misc Config
 CONFIG VCCAUX=3.3;
 

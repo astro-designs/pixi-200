@@ -1,4 +1,6 @@
--- General-purpose I2C Switch
+-- General-purpose I2C Switch VHDL
+-- Astro Designs Ltd.
+-- $Id:$
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

@@ -1,5 +1,6 @@
 -- PiXi-200 top-level VHDL
 -- Astro Designs Ltd.
+-- $Id:$
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -7,11 +8,13 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_MISC.ALL;
 
-Library UNISIM;
+library UNISIM;
 use UNISIM.vcomponents.all;
 
+library work;
 use work.types_pkg.all;
 use work.build_time_pkg.all;
+use work.registers_pkg.all;
 
 ENTITY pixi IS
    GENERIC (
@@ -149,6 +152,9 @@ architecture rtl of pixi is
    signal clk_1hz : std_logic;
    signal exp_clk : std_logic;
    signal runtime_count : std_logic_vector(31 downto 0);
+   signal en_5s : std_logic;
+   signal en_5s_phase : std_logic_vector(3 downto 0);
+   signal en_0hz2 : std_logic;
      
    -- SPI
    signal spi_FPGA_ch : std_logic;
@@ -169,6 +175,14 @@ architecture rtl of pixi is
    -- IIC
    signal i2c_slave_address : std_logic_vector(6 downto 0);
    
+   -- Registers (see registers_pkg.vhd for full definition of the registers)
+   constant num_registers : integer := 256;
+   signal wreg : t_slv16_vector(num_registers-1 downto 0);
+   signal rreg : t_slv16_vector(num_registers-1 downto 0);
+   signal wen : std_logic_vector(num_registers-1 downto 0);
+   signal ren : std_logic_vector(num_registers-1 downto 0);
+   signal wen_ext : t_slv16_vector(num_registers-1 downto 0);
+
    -- GPIO
    signal gpio1_f1 : std_logic_vector(23 downto 0);
    signal gpio1_f2 : std_logic_vector(23 downto 0);
@@ -202,91 +216,7 @@ architecture rtl of pixi is
    
    -- Test
    signal testmode : boolean := false;
-      signal kbscan_char : std_logic_vector(7 downto 0); -- 8-bit character code (ASCII)
-
-   -- Register map
-   constant num_registers    : integer := 256;
-
-   constant reg_build_time0  : integer := 16#00#;
-   constant reg_build_time1  : integer := 16#01#;
-   constant reg_build_time2  : integer := 16#02#;
-
-   constant reg_test0        : integer := 16#00#;
-   constant reg_test1        : integer := 16#01#;
-   constant reg_test2        : integer := 16#02#;
-   constant reg_test3        : integer := 16#03#;
-   constant reg_test4        : integer := 16#04#;
-   constant reg_test5        : integer := 16#05#;
-   constant reg_test6        : integer := 16#06#;
-   constant reg_test7        : integer := 16#07#;
-
-   constant reg_i2c_config   : integer := 16#08#;
-   constant reg_spi_config   : integer := 16#09#;
-
-   constant reg_pi_gpio_cfg0 : integer := 16#10#;
-   constant reg_pi_gpio_cfg1 : integer := 16#11#;
-
-   constant reg_gpio1a_in    : integer := 16#20#;
-   constant reg_gpio1b_in    : integer := 16#21#;
-   constant reg_gpio1c_in    : integer := 16#22#;
-   constant reg_gpio2a_in    : integer := 16#23#;
-   constant reg_gpio2b_in    : integer := 16#24#;
-   constant reg_gpio3a_in    : integer := 16#25#;
-   constant reg_gpio3b_in    : integer := 16#26#;
-   
-   constant reg_gpio1a_out   : integer := 16#20#;
-   constant reg_gpio1b_out   : integer := 16#21#;
-   constant reg_gpio1c_out   : integer := 16#22#;
-   constant reg_gpio2a_out   : integer := 16#23#;
-   constant reg_gpio2b_out   : integer := 16#24#;
-   constant reg_gpio3a_out   : integer := 16#25#;
-   constant reg_gpio3b_out   : integer := 16#26#;
-
-   constant reg_gpio1a_mode  : integer := 16#27#;
-   constant reg_gpio1b_mode  : integer := 16#28#;
-   constant reg_gpio1c_mode  : integer := 16#29#;
-   constant reg_gpio2a_mode  : integer := 16#2A#;
-   constant reg_gpio2b_mode  : integer := 16#2B#;
-   constant reg_gpio3a_mode  : integer := 16#2C#;
-   constant reg_gpio3b_mode  : integer := 16#2D#;
-   
-   constant reg_leds         : integer := 16#30#;
-   constant reg_led_ctrl     : integer := 16#31#;
-   constant reg_switches     : integer := 16#32#;
-   constant reg_keypad       : integer := 16#33#;
-
-   constant reg_vfd          : integer := 16#38#;
-   constant reg_vfd_ctrl     : integer := 16#39#;
-
-   constant reg_pwm0         : integer := 16#40#;
-   constant reg_pwm1         : integer := 16#41#;
-   constant reg_pwm2         : integer := 16#42#;
-   constant reg_pwm3         : integer := 16#43#;
-   constant reg_pwm4         : integer := 16#44#;
-   constant reg_pwm5         : integer := 16#45#;
-   constant reg_pwm6         : integer := 16#46#;
-   constant reg_pwm7         : integer := 16#47#;
-   constant reg_pwm_gain     : integer := 16#48#;
-   constant reg_pwm_offset   : integer := 16#49#;
-   constant reg_pwm_cfg      : integer := 16#4F#;
-   constant reg_timer0       : integer := 16#50#;
-   constant reg_timer1       : integer := 16#51#;
-   constant reg_timer_cfg    : integer := 16#54#;
-   constant reg_counter0     : integer := 16#58#;
-   constant reg_counter1     : integer := 16#59#;
-   constant reg_counter_cfg  : integer := 16#5C#;
-
-   constant reg_runtime0     : integer := 16#F0#;
-   constant reg_runtime1     : integer := 16#F1#;
-   constant reg_demoseq      : integer := 16#F8#;
-   constant reg_options0     : integer := 16#FE#;
-   constant reg_options1     : integer := 16#FF#;
-
-   signal wreg : t_slv16_vector(num_registers-1 downto 0);
-   signal rreg : t_slv16_vector(num_registers-1 downto 0);
-   signal wen : std_logic_vector(num_registers-1 downto 0);
-   signal ren : std_logic_vector(num_registers-1 downto 0);
-   signal wen_ext : t_slv16_vector(num_registers-1 downto 0);
+   signal key_code : std_logic_vector(7 downto 0); -- 8-bit character code (ASCII)
 
    -- Define a simple function to convert a string of characters for the LCD/VFD display into an array of
    -- 16-bit sdt_logic_vector words, compatible with the LCD interface.
@@ -306,6 +236,19 @@ architecture rtl of pixi is
    attribute equivalent_register_removal of gpio3a_vfd : signal is "no";
    attribute keep of gpio3b_vfd : signal is "true";
    attribute equivalent_register_removal of gpio3b_vfd : signal is "no";
+
+COMPONENT fifo_generator_v9_3
+  PORT (
+    clk : IN STD_LOGIC;
+    rst : IN STD_LOGIC;
+    din : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    wr_en : IN STD_LOGIC;
+    rd_en : IN STD_LOGIC;
+    dout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    full : OUT STD_LOGIC;
+    empty : OUT STD_LOGIC
+  );
+END COMPONENT;
 
 begin
 
@@ -398,6 +341,23 @@ begin
       end if;
    end process;
 
+   -- 0.2Hz (5s) clock-enable generator
+   process(clk_33m)
+   begin
+      if reset_n = '0' then
+         en_5s_phase <= (others => '0');
+         en_5s <= '0';
+      elsif rising_edge(clk_33m) and en_1hz = '1' then
+         en_5s <= '0';
+         if en_5s_phase = X"4" then
+            en_5s_phase <= X"0";
+            en_5s <= '1';
+         else
+            en_5s_phase <= en_5s_phase + 1;
+         end if;
+      end if;
+   end process;
+   en_0hz2 <= '1' when en_1hz = '1' and en_5s = '1' else '0';
 
 -- ********************************************
 -- ***** Startup & Reset                  *****
@@ -492,7 +452,7 @@ begin
    end process;
    
    spi_wen_33m <= '1' when spi_wen_buf(3 downto 2) = "01" else '0';
-   spi_ren_33m <= '1' when spi_ren_buf(3 downto 2) = "01" else '0';
+   spi_ren_33m <= '1' when spi_ren_buf(3 downto 2) = "10" else '0';
 
 
    -- Create writeable registers
@@ -524,18 +484,9 @@ begin
    end process;
    
    -- Create read strobes
-   process(clk_33m)
-   begin
-      if rising_edge(clk_33m) then
-         for i in 0 to num_registers-1 loop
-            ren(i) <= '0';
-         end loop;
-         if spi_ren_33m = '1' then
-            ren(conv_integer(unsigned(spi_addr))) <= '1';
-         end if;
-      end if;
-   end process;
-   
+   ren_gen : for i in 0 to num_registers-1 generate
+      ren(i) <= '1' when spi_ren_33m = '1' and conv_integer(unsigned(spi_addr)) = i else '0';
+   end generate;
    
 -- ********************************************
 -- ***** Misc Readable Registers          *****
@@ -907,6 +858,8 @@ begin
       signal lcd_fifo_rdata : std_logic_vector(15 downto 0);
       signal lcd_fifo_ren : std_logic;
       signal lcd_fifo_empty : std_logic;
+      signal lcd_fifo_full : std_logic;
+      signal lcd_fifo_level : std_logic_vector(7 downto 0);
       type t_lcd_sm_state is (lcd_sm_idle, lcd_sm_wen, lcd_sm_wen_wait, lcd_sm_ren, lcd_sm_ren_wait);
       signal lcd_sm_state : t_lcd_sm_state;
       signal lcd_wen : std_logic;
@@ -921,7 +874,7 @@ begin
       constant lcd_init : t_slv16_vector(0 to 127) := (X"0030", X"8FFF", X"0030", X"8002", X"0030", X"8002", X"0038", X"0102",
                                                        X"8002", X"000C", X"8002", X"0001", X"8002", X"0006", X"0002", X"8FFF") & (
                                                        -- Welcome message next...
-                                                       string_to_slv16_vector("Welcome to the PiXi-200                                                                                         "));
+                                                       string_to_slv16_vector("Welcome to the PiXi-200                 Now let's get the Pi involved...                                        "));
       --                                               string_to_slv16_vector("^234567890123456789012345678901234567890^23456789012345678901234567890123456789^12345678901234567890123456789012"));
 
    begin
@@ -941,6 +894,8 @@ begin
          RD_EN => lcd_fifo_ren,
          DOUT => lcd_fifo_rdata,
          -- Status
+         LEVEL => lcd_fifo_level,
+         FULL => lcd_fifo_full,
          EMPTY => lcd_fifo_empty);
       
       -- LCD/VFD Output State machine
@@ -965,7 +920,7 @@ begin
                         else
                            lcd_sm_state <= lcd_sm_wen;
                            lcd_wen <= '1';
-                           lcd_cycle_count <= X"000100";
+                           lcd_cycle_count <= X"00000C";
                         end if;
                      end if;
                   else
@@ -974,7 +929,7 @@ begin
                when lcd_sm_wen => -- Write to LCD
                   if lcd_cycle_count = X"000000" then
                      lcd_wen <= '0';
-                     lcd_cycle_count <= X"000100";
+                     lcd_cycle_count <= X"00000C";
                      lcd_sm_state <= lcd_sm_wen_wait;
                   else
                      lcd_cycle_count <= lcd_cycle_count - 1;
@@ -1016,6 +971,10 @@ begin
       
       gpio3_oe_vfd <= "00"; -- when startup or testmode else wreg(reg_vfd)(13);
       gpio3_tr_vfd <= "00";
+
+      -- Debug...
+      leds(20)(6 downto 0) <= lcd_fifo_level(6 downto 0);
+      leds(20)(7) <= lcd_fifo_full;
 
 end generate;
 
@@ -1102,12 +1061,12 @@ end generate;
    --                     PWM Output          (mode = "10") for servo control or
    --                     (TBD)               (mode = "11")
    gpio2_io_ctrl_gen : for i in 0 to 7 generate
-      GPIO2(i)    <= gpio2a_pwm(i)           when testmode else 
+      GPIO2(i)    <= gpio2a_pwm(i)           when testmode or DEMO_BUILD = "0000" else 
                      wreg(reg_gpio2a_out)(i) when wreg(reg_gpio2a_mode)((i*2)+1 downto i*2) = "01" else
                      gpio2a_pwm(i)           when wreg(reg_gpio2a_mode)((i*2)+1 downto i*2) = "10" else
                      --(TBD)                 when wreg(reg_gpio2a_mode)((i*2)+1 downto i*2) = "11" else
                      '0'; -- ("00")
-      GPIO2(i+8)  <= gpio2b_pwm(i)           when testmode else 
+      GPIO2(i+8)  <= gpio2b_pwm(i)           when testmode or DEMO_BUILD = "0000" else 
                      wreg(reg_gpio2b_out)(i) when wreg(reg_gpio2b_mode)((i*2)+1 downto i*2) = "01" else
                      gpio2b_pwm(i)           when wreg(reg_gpio2b_mode)((i*2)+1 downto i*2) = "10" else
                      --(TBD)                 when wreg(reg_gpio2b_mode)((i*2)+1 downto i*2) = "11" else
@@ -1261,7 +1220,7 @@ end generate;
       if reset_p = '1' then
          clock_leds <= "100000000000";
       elsif rising_edge(clk_33m) then
-         if en_1hz = '1' then
+         if (en_0hz2 = '1') or (en_5Hz = '1' and DEMO_BUILD = X"0002" and SW(4) = '1') then
             clock_leds <= clock_leds(10 downto 0) & clock_leds(11);
          end if;
       end if;
@@ -1291,23 +1250,37 @@ end generate;
    -- Multiplex LED driver output source signals based on reg_led_ctrl (when enabled)
    LED <= moving_leds when startup else 
           leds(14)    when testmode else
-          leds(1)     when wreg(reg_led_ctrl)(3 downto 0) = "00001" and ENABLE_LED_CTRL else
-          leds(2)     when wreg(reg_led_ctrl)(3 downto 0) = "00010" and ENABLE_LED_CTRL else
-          leds(3)     when wreg(reg_led_ctrl)(3 downto 0) = "00011" and ENABLE_LED_CTRL else
-          leds(4)     when wreg(reg_led_ctrl)(3 downto 0) = "00100" and ENABLE_LED_CTRL else
-          leds(5)     when wreg(reg_led_ctrl)(3 downto 0) = "00101" and ENABLE_LED_CTRL else
-          leds(6)     when wreg(reg_led_ctrl)(3 downto 0) = "00110" and ENABLE_LED_CTRL else
-          leds(7)     when wreg(reg_led_ctrl)(3 downto 0) = "00111" and ENABLE_LED_CTRL else
-          leds(8)     when wreg(reg_led_ctrl)(3 downto 0) = "01000" and ENABLE_LED_CTRL else
-          leds(9)     when wreg(reg_led_ctrl)(3 downto 0) = "01001" and ENABLE_LED_CTRL else
-          leds(10)    when wreg(reg_led_ctrl)(3 downto 0) = "01010" and ENABLE_LED_CTRL else
-          leds(11)    when wreg(reg_led_ctrl)(3 downto 0) = "01011" and ENABLE_LED_CTRL else
-          leds(12)    when wreg(reg_led_ctrl)(3 downto 0) = "01100" and ENABLE_LED_CTRL else
-          leds(13)    when wreg(reg_led_ctrl)(3 downto 0) = "01101" and ENABLE_LED_CTRL else
-          leds(14)    when wreg(reg_led_ctrl)(3 downto 0) = "01110" and ENABLE_LED_CTRL else
-          leds(15)    when wreg(reg_led_ctrl)(3 downto 0) = "01111" and ENABLE_LED_CTRL else
+          leds(1)     when wreg(reg_led_ctrl)(4 downto 0) = "00001" and ENABLE_LED_CTRL else
+          leds(2)     when wreg(reg_led_ctrl)(4 downto 0) = "00010" and ENABLE_LED_CTRL else
+          leds(3)     when wreg(reg_led_ctrl)(4 downto 0) = "00011" and ENABLE_LED_CTRL else
+          leds(4)     when wreg(reg_led_ctrl)(4 downto 0) = "00100" and ENABLE_LED_CTRL else
+          leds(5)     when wreg(reg_led_ctrl)(4 downto 0) = "00101" and ENABLE_LED_CTRL else
+          leds(6)     when wreg(reg_led_ctrl)(4 downto 0) = "00110" and ENABLE_LED_CTRL else
+          leds(7)     when wreg(reg_led_ctrl)(4 downto 0) = "00111" and ENABLE_LED_CTRL else
+          leds(8)     when wreg(reg_led_ctrl)(4 downto 0) = "01000" and ENABLE_LED_CTRL else
+          leds(9)     when wreg(reg_led_ctrl)(4 downto 0) = "01001" and ENABLE_LED_CTRL else
+          leds(10)    when wreg(reg_led_ctrl)(4 downto 0) = "01010" and ENABLE_LED_CTRL else
+          leds(11)    when wreg(reg_led_ctrl)(4 downto 0) = "01011" and ENABLE_LED_CTRL else
+          leds(12)    when wreg(reg_led_ctrl)(4 downto 0) = "01100" and ENABLE_LED_CTRL else
+          leds(13)    when wreg(reg_led_ctrl)(4 downto 0) = "01101" and ENABLE_LED_CTRL else
+          leds(14)    when wreg(reg_led_ctrl)(4 downto 0) = "01110" and ENABLE_LED_CTRL else
+          leds(15)    when wreg(reg_led_ctrl)(4 downto 0) = "01111" and ENABLE_LED_CTRL else
           leds(16)    when wreg(reg_led_ctrl)(4 downto 0) = "10000" and ENABLE_LED_CTRL else
           leds(17)    when wreg(reg_led_ctrl)(4 downto 0) = "10001" and ENABLE_LED_CTRL else
+          leds(18)    when wreg(reg_led_ctrl)(4 downto 0) = "10010" and ENABLE_LED_CTRL else
+          leds(19)    when wreg(reg_led_ctrl)(4 downto 0) = "10011" and ENABLE_LED_CTRL else
+          leds(20)    when wreg(reg_led_ctrl)(4 downto 0) = "10100" and ENABLE_LED_CTRL else
+          leds(21)    when wreg(reg_led_ctrl)(4 downto 0) = "10101" and ENABLE_LED_CTRL else
+          leds(22)    when wreg(reg_led_ctrl)(4 downto 0) = "10110" and ENABLE_LED_CTRL else
+          leds(23)    when wreg(reg_led_ctrl)(4 downto 0) = "10111" and ENABLE_LED_CTRL else
+          leds(24)    when wreg(reg_led_ctrl)(4 downto 0) = "11000" and ENABLE_LED_CTRL else
+          leds(25)    when wreg(reg_led_ctrl)(4 downto 0) = "11001" and ENABLE_LED_CTRL else
+          leds(26)    when wreg(reg_led_ctrl)(4 downto 0) = "11010" and ENABLE_LED_CTRL else
+          leds(27)    when wreg(reg_led_ctrl)(4 downto 0) = "11011" and ENABLE_LED_CTRL else
+          leds(28)    when wreg(reg_led_ctrl)(4 downto 0) = "11100" and ENABLE_LED_CTRL else
+          leds(29)    when wreg(reg_led_ctrl)(4 downto 0) = "11101" and ENABLE_LED_CTRL else
+          leds(30)    when wreg(reg_led_ctrl)(4 downto 0) = "11110" and ENABLE_LED_CTRL else
+          leds(31)    when wreg(reg_led_ctrl)(4 downto 0) = "11111" and ENABLE_LED_CTRL else
           leds(0);    -- Default to basic LED control register
    
    
@@ -1317,131 +1290,96 @@ end generate;
 -- Note this function required a pull-down resistor on GPIO1(19:16), implemented on-chip, definec in the UCF file.
 
    kbscan_blk : if ENABLE_KBSCAN generate -- Use a generate to keep any new signal definitions declared within this section of code only - keeps things tidy...
-      constant KEYPAD_STYLE : std_logic := '0'; -- Set to '0' if the keypad is a telephone style (3x4) keypad or '1' if it's a hexadecimal style (4x4) keypad
-      signal scan_count : std_logic_vector(15 downto 0);
-      signal gpio1_kbscan_in : std_logic_vector(3 downto 0); -- 4-bit input from keypad
-      signal gpio_kbscan_inbuf : t_slv4_vector(2 downto 0); -- 4-bit x 3 shift register
-      signal scan_code : std_logic_vector(15 downto 0); -- 16 bit allows for 4x4 keypad (using one-hot coding)
-      signal key_pressed : std_logic_vector(2 downto 0);
-      type kb_ram is array (0 to 15) of std_logic_vector(7 downto 0);
-      signal kb_fifo : kb_ram;
-      signal write_pointer : std_logic_vector(3 downto 0);
-      signal read_pointer : std_logic_vector(3 downto 0);
+      signal key_pressed : std_logic;
       signal read_data : std_logic_vector(7 downto 0);
-      signal fifo_write : std_logic;
-      signal fifo_read : std_logic;
       signal empty : std_logic;
       signal full : std_logic;
+
+      attribute keep of key_pressed : signal is "true";
+      attribute equivalent_register_removal of key_pressed : signal is "no";
+      attribute keep of read_data : signal is "true";
+      attribute equivalent_register_removal of read_data : signal is "no";
+      attribute keep of empty : signal is "true";
+      attribute equivalent_register_removal of empty : signal is "no";
+      attribute keep of full : signal is "true";
+      attribute equivalent_register_removal of full : signal is "no";
+
    begin
 
-   leds(14)(0) <= kbscan_char(7);
-   leds(14)(1) <= kbscan_char(6);
-   leds(14)(2) <= kbscan_char(5);
-   leds(14)(3) <= kbscan_char(4);
-   leds(14)(4) <= kbscan_char(3);
-   leds(14)(5) <= kbscan_char(2);
-   leds(14)(6) <= kbscan_char(1);
-   leds(14)(7) <= kbscan_char(0);
+   leds(14)(0) <= key_code(7);
+   leds(14)(1) <= key_code(6);
+   leds(14)(2) <= key_code(5);
+   leds(14)(3) <= key_code(4);
+   leds(14)(4) <= key_code(3);
+   leds(14)(5) <= key_code(2);
+   leds(14)(6) <= key_code(1);
+   leds(14)(7) <= key_code(0);
 
-      gpio1_kbscan_in <= GPIO1(19 downto 16); -- Assumes keypad row connections are connecter to GPIO1(19:16)
+      kbscan0 : entity work.kbscan 
+      generic map (
+         ROWS => 4,
+         COLUMNS => 4,
+         KEY_MAP => "123456789*0#")
+      port map (
+         RESET => SW(1),
+         CLK => clk_33m,
+         CLK_EN => '1',
+         
+         SCAN_OUT => gpio1_kbscan_out,
+         SCAN_IN => GPIO1(19 downto 16),
+         
+         KEY_PRESSED => key_pressed,
+         KEY_CODE => key_code);
+         
 
-      process(clk_33m)
-      begin
-         if rising_edge(clk_33m) then
-            scan_count <= scan_count + 1; -- Keyboard scanner counter used to sequence the scanning of each line in turn.
-            gpio_kbscan_inbuf <= gpio_kbscan_inbuf(1 downto 0) & gpio1_kbscan_in; -- Register keyboard scan input into a shift register / buffer
+your_instance_name : fifo_generator_v9_3
+  PORT MAP (
+    clk => clk_33m,
+    rst => SW(1),
+    din => key_code,
+    wr_en => key_pressed,
+    rd_en => ren(reg_keypad),
+    dout => read_data,
+    full => full,
+    empty => empty
+  );
 
-            case scan_count(15 downto 12) is -- Decode scan_count 
-               when "0000" => scan_code(3 downto 0)   <= gpio_kbscan_inbuf(2);
-               when "0001" => scan_code(7 downto 4)   <= gpio_kbscan_inbuf(2);
-               when "0010" => scan_code(11 downto 8)  <= gpio_kbscan_inbuf(2);
-               when "0011" => scan_code(15 downto 12) <= gpio_kbscan_inbuf(2);
-               when others => NULL;
-            end case;
-            
-            key_pressed(2 downto 1) <= key_pressed(1 downto 0);
-
-            if scan_count = all_ones(scan_count'range) then
-               key_pressed(0) <= '0'; -- default to no key pressed unless key is actually pressed.
-               if KEYPAD_STYLE = '0' then -- Note this section of code is defined for a telephone style keypad (1,2,3  4,5,6  7,8,9  *,0,#)
-                  case scan_code is
-                  -- COL:  1234123412341234
-                  -- ROW:  4444333322221111
-                     when "0000000000000001" => kbscan_char <= "00110001"; key_pressed(0) <= '1'; -- "1"
-                     when "0000000000000010" => kbscan_char <= "00110010"; key_pressed(0) <= '1'; -- "2"
-                     when "0000000000000100" => kbscan_char <= "00110011"; key_pressed(0) <= '1'; -- "3"
-                     when "0000000000010000" => kbscan_char <= "00110100"; key_pressed(0) <= '1'; -- "4"
-                     when "0000000000100000" => kbscan_char <= "00110101"; key_pressed(0) <= '1'; -- "5"
-                     when "0000000001000000" => kbscan_char <= "00110110"; key_pressed(0) <= '1'; -- "6"
-                     when "0000000100000000" => kbscan_char <= "00110111"; key_pressed(0) <= '1'; -- "7"
-                     when "0000001000000000" => kbscan_char <= "00111000"; key_pressed(0) <= '1'; -- "8"
-                     when "0000010000000000" => kbscan_char <= "00111001"; key_pressed(0) <= '1'; -- "9"
-                     when "0001000000000000" => kbscan_char <= "00101010"; key_pressed(0) <= '1'; -- "*"
-                     when "0010000000000000" => kbscan_char <= "00110000"; key_pressed(0) <= '1'; -- "0"
-                     when "0100000000000000" => kbscan_char <= "00100011"; key_pressed(0) <= '1'; -- "#"
-                     when others => NULL; -- Nothing to do
-                  end case;
-               else -- Note this section of code is defined for a 4x4 hexadecimal style keypad. (0,1,2,3  4,5,6,7  8,9,A,B  C,D,E,F)
-                  case scan_code is
-                     when "0000000000000001" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "0"
-                     when "0000000000000010" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "1"
-                     when "0000000000000100" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "2"
-                     when "0000000000001000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "3"
-                     when "0000000000010000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "4"
-                     when "0000000000100000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "5"
-                     when "0000000001000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "6"
-                     when "0000000010000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "7"
-                     when "0000000100000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "8"
-                     when "0000001000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "9"
-                     when "0000010000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "A"
-                     when "0000100000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "B"
-                     when "0001000000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "C"
-                     when "0010000000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "D"
-                     when "0100000000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "E"
-                     when "1000000000000000" => kbscan_char <= "00000000"; key_pressed(0) <= '1'; -- "F"
-                     when others => NULL; -- Nothing to do
-                  end case;
-               end if;
-            end if;         
-         end if;
-      end process;
-
-      gpio1_kbscan_out(0) <= '1' when scan_count(15 downto 12) = "0000" else '0'; -- Scan top row
-      gpio1_kbscan_out(1) <= '1' when scan_count(15 downto 12) = "0001" else '0'; -- Scan row 2
-      gpio1_kbscan_out(2) <= '1' when scan_count(15 downto 12) = "0010" else '0'; -- Scan row 3
-      gpio1_kbscan_out(3) <= '1' when scan_count(15 downto 12) = "0011" else '0'; -- Scan bottom row
-
-      -- Simple 16 character FIFO
-      process(clk_33m)
-      begin
-         if reset_p = '1' then
-            write_pointer <= (others => '0');
-            read_pointer <= (others => '0');
-         elsif rising_edge(clk_33m) then
-            -- Write port...
-            if fifo_write = '1' and full = '0' then
-               kb_fifo(conv_integer(unsigned(write_pointer))) <= kbscan_char;
-               write_pointer <= write_pointer + 1;
-            end if;
-            
-            -- Read port...
-            if fifo_read = '1' and empty = '0' then
-               read_pointer <= read_pointer + 1;
-            end if;
-         end if;
-      end process;
-
-      fifo_write <= '1' when key_pressed = "011" else '0'; -- Only writes to FIFO once per key press - no auto repeat
-      fifo_read <= ren(reg_keypad);
-      
-      read_data <= kb_fifo(conv_integer(unsigned(read_pointer)));
-      empty <= '1' when read_pointer = write_pointer else '0';
-      full <= '1' when (write_pointer + 1) = read_pointer else '0';
+--      kb_fifo : entity work.simple_fifo
+--      generic map(
+--         WIDTH => 8,
+--         DEPTH => 16)
+--      port map(
+--         RESET => SW(1),
+--         CLK => clk_33m,
+--         CLK_EN => '1',
+--         
+--         WEN => key_pressed,
+--         DATA_IN => key_code,
+--         REN => ren(reg_keypad),
+--         DATA_OUT => read_data, --rreg(reg_keypad)(7 downto 0),
+--         
+--         LEVEL(4 downto 0) => leds(21)(4 downto 0),
+--         LEVEL(7 downto 5) => open,
+--         EMPTY => empty,
+--         FULL => full);
 
       rreg(reg_keypad)(7 downto 0) <= read_data;
       rreg(reg_keypad)(8) <= empty;
       rreg(reg_keypad)(9) <= full;
 
+      -- Debug...
+      leds(19)(0) <= not leds(19)(0) when rising_edge(clk_33m) and ren(51) = '1';
+      leds(19)(1) <= not leds(19)(1) when rising_edge(clk_33m) and ren(reg_keypad) = '1';
+      leds(19)(2) <= spi_wen_33m;
+      leds(19)(3) <= spi_ren_33m;
+      leds(19)(4) <= spi_wen;
+      leds(19)(5) <= spi_ren;
+      leds(19)(6) <= full;
+      leds(19)(7) <= empty;
+      leds(21)(5) <= key_pressed;
+      leds(21)(6) <= full;
+      leds(21)(7) <= empty;
+      leds(22)(7 downto 0) <= read_data;
    end generate;
    
    
@@ -1505,7 +1443,8 @@ end generate;
       begin
 
          -- Set PWM level from register or sequencer...
-         pwm_level(i)(PWM_BITS-1 downto 0) <= wreg(reg_pwm0 + i)(PWM_BITS-1 downto 0) when wreg(reg_pwm_cfg)(i) = '0' else pwm_pos(i)(PWM_BITS-1 downto 0);
+--         pwm_level(i)(PWM_BITS-1 downto 0) <= wreg(reg_pwm0 + i)(PWM_BITS-1 downto 0) when wreg(reg_pwm_cfg)(i) = '0' else pwm_pos(i)(PWM_BITS-1 downto 0);
+         pwm_level(i)(PWM_BITS-1 downto 0) <= wreg(reg_pwm0 + i)(PWM_BITS-1 downto 0) when SW(4) = '0' else std_logic_vector(conv_unsigned(102,10));
 
          process(clk_33m)
          begin
@@ -1532,11 +1471,11 @@ end generate;
       process(clk_33m)
       begin
          if DEMO_BUILD = X"0004" then
-            pwm_test_pos(0) <= kbscan_char + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
+            pwm_test_pos(0) <= key_code + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
          elsif startup or (SW(1) = '1' and SW(2) = '1') then
             pwm_test_dir(0) <= '1';
             pwm_test_pos(0) <= std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 150/2000),PWM_BITS)); -- 1.5ms (mid-position)
---            pwm_test_pos(0) <= kbscan_char + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
+--            pwm_test_pos(0) <= key_code + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
          elsif rising_edge(clk_33m) then
             if en_5hz = '1' then
                if SW(1) = '1' then
@@ -1562,11 +1501,11 @@ end generate;
       process(clk_33m)
       begin
          if DEMO_BUILD = X"0004" then
-            pwm_test_pos(1) <= kbscan_char + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
+            pwm_test_pos(1) <= key_code + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
          elsif startup or (SW(3) = '1' and SW(4) = '1') then
             pwm_test_dir(1) <= '1';
             pwm_test_pos(1) <= std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 150/2000),PWM_BITS)); -- 1.5ms (mid-position)
---            pwm_test_pos(1) <= kbscan_char + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
+--            pwm_test_pos(1) <= key_code + std_logic_vector(conv_unsigned(((2**PWM_BITS - 1) * 100/2000),PWM_BITS)); -- 1.5ms (mid-position)
          elsif rising_edge(clk_33m) then
             if en_5hz = '1' then
                if SW(3) = '1' then
@@ -1611,12 +1550,16 @@ end generate;
       pwm_fifo : entity work.fifo 
       generic map (
          WIDTH => 64,
-         DEPTH => 64)
---         PRELOAD_LEVEL => 16,
---         INIT_00 => X"005A005A005A005A0064006400640064004B004B004B004B0034003400340034",
---         INIT_01 => X"0034003400340034003C003C003C003C00460046004600460050005000500050",
---         INIT_02 => X"005A005A005A005A0064006400640064004B004B004B004B0034003400340034",
---         INIT_03 => X"0034003400340034003C003C003C003C00460046004600460050005000500050")
+         DEPTH => 64,
+         PRELOAD_LEVEL => 0,
+         INIT_00 => X"0040005900400059005900400059004000330066003300660066003300660033",
+         INIT_01 => X"003D003D003D003D0038003800380038004D004D004D004D004D004D004D004D",
+         INIT_02 => X"0040005900400059005900400059004000330066003300660066003300660033",
+         INIT_03 => X"003D003D003D003D0038003800380038004D004D004D004D004D004D004D004D",
+         INIT_04 => X"0040005900400059005900400059004000330066003300660066003300660033",
+         INIT_05 => X"003D003D003D003D0038003800380038004D004D004D004D004D004D004D004D",
+         INIT_06 => X"0040005900400059005900400059004000330066003300660066003300660033",
+         INIT_07 => X"003D003D003D003D0038003800380038004D004D004D004D004D004D004D004D")
       port map(
          RESET => startup_reset,
          CLK => clk_33m,
