@@ -20,6 +20,8 @@ case "$1" in
     # run application you want to start
     /usr/local/bin/gpio load spi
     /usr/local/bin/gpio pixi_prog
+    sleep 2
+    nohup /usr/bin/python /home/pi/src/pigredients/examples/pixi200-demo.py >> /home/pi/pixi-demo.stdout.log 2>> /home/pi/pixi-demo.stderr.log &
     ;;
   stop)
     echo "Stopping PiXi-200"
