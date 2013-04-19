@@ -2,10 +2,11 @@
 -- Astro Designs Ltd.
 -- $Id:$
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_misc.all;
 
 library work;
 use work.types_pkg.all;
@@ -14,6 +15,7 @@ entity i2c_switch is
    generic (
       SLAVES : integer := 4);
    port (
+      RESET                : in std_logic := '0'; -- Async reset
       TIMEOUT_CLK          : in std_logic; -- Misc clock, 
       I2C_STOP_INHIBIT     : in std_logic := '0'; -- Only needed if Master does not support 'repeated starts'
 
@@ -36,7 +38,7 @@ architecture rtl of i2c_switch is
    signal i2c_slave_addr : std_logic_vector(6 downto 0);
    signal i2c_slave_rxdata : std_logic_vector(7 downto 0);
    signal i2c_slave_txdata : std_logic_vector(7 downto 0);
-   type t_i2c_state is (i2c_sm_idle, i2c_sm_slave_addr, i2c_sm_slave_addr_ack, i2c_sm_rxbyte, i2c_sm_txbyte, i2c_sm_rxbyte_ack, i2c_sm_txbyte_ack, i2c_sm_stopwait);
+   type t_i2c_state is (i2c_sm_idle, i2c_sm_slave_addr, i2c_sm_slave_addr_ack, i2c_sm_rxbyte, i2c_sm_txbyte, i2c_sm_rxbyte_ack, i2c_sm_txbyte_ack, i2c_sm_stop_inhibit);
    signal i2c_state : t_i2c_state;
    signal i2c_state_check0 : t_i2c_state;
    signal i2c_state_check1 : t_i2c_state;
@@ -112,7 +114,7 @@ architecture rtl of i2c_switch is
       -- i2c tracking state machine
       process(M_SCK)
       begin
-         if reset_p = '1' or (i2c_stop = '1' and i2c_state /= i2c_sm_stop_inhibit) then
+         if RESET = '1' or (i2c_stop = '1' and i2c_state /= i2c_sm_stop_inhibit) then
             i2c_state <= i2c_sm_idle;
          elsif falling_edge(M_SCK) then
             i2c_start_reset <= '0';
@@ -156,7 +158,7 @@ architecture rtl of i2c_switch is
                      i2c_state <= i2c_sm_txbyte_ack;
                   end if;
                when i2c_sm_rxbyte_ack =>
-                  if I2C_STOP_INHIBIT = '1' and PI_SDA = '1' then -- Detect AK and inhibit STOP if STOP needs to be inhibited
+                  if I2C_STOP_INHIBIT = '1' and M_SDA = '1' then -- Detect AK and inhibit STOP if STOP needs to be inhibited
                      i2c_state <= i2c_sm_stop_inhibit;
                   else
                      i2c_state <= i2c_sm_rxbyte;

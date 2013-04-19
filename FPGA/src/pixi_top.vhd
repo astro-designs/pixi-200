@@ -188,6 +188,8 @@ architecture rtl of pixi is
    signal gpio1_f2 : std_logic_vector(23 downto 0);
    signal gpio1_f3 : std_logic_vector(23 downto 0);
    signal gpio1_kbscan_out : std_logic_vector(3 downto 0);
+   signal gpio1_sck0 : std_logic;
+   signal gpio1_sda0 : std_logic;
    signal gpio2a_pwm : std_logic_vector(7 downto 0);
    signal gpio2b_pwm : std_logic_vector(7 downto 0);
    signal gpio2_f3 : std_logic_vector(15 downto 0);
@@ -458,7 +460,10 @@ begin
    -- Create writeable registers
    process(clk_33m)
    begin
-      if rising_edge(clk_33m) then
+      if startup_reset = '1' then
+         -- Set any necessary reset states for any registers here...
+         wreg(reg_vfd_ctrl) <= X"8000"; -- Default LCD/VFD timing & interface standard
+      elsif rising_edge(clk_33m) then
          if spi_wen_33m = '1' then
             wreg(conv_integer(unsigned(spi_addr))) <= spi_wdata;
          end if;
@@ -553,213 +558,40 @@ begin
 -- ********************************************
 -- ***** I2C Switch                       *****
 -- ********************************************
--- With a fix for the missing 'repeated start' I2C operation that the Pi can't support.
+
+   -- Note: Includes a fix for the missing 'repeated start' I2C operation that the Pi might not support.
+   -- To enable repeated start, the processor must set a bit in the PiXi-200 map to inhibit the automatic stop.
+   -- Process: set stop inhibit bit then send data. Reset stop inhibit bit just before sending the final byte to enable the final stop.
    
-   i2c_blk : block
-
-   signal i2c_sda : std_logic;
-   signal i2c_rnw : std_logic;
-   signal i2c_rxbuf : std_logic_vector(7 downto 0);
-   signal i2c_txbuf : std_logic_vector(7 downto 0);
-   signal i2c_slave_addr : std_logic_vector(6 downto 0);
-   signal i2c_slave_rxdata : std_logic_vector(7 downto 0);
-   signal i2c_slave_txdata : std_logic_vector(7 downto 0);
-   type t_i2c_state is (i2c_sm_idle, i2c_sm_slave_addr, i2c_sm_slave_addr_ack, i2c_sm_rxbyte, i2c_sm_txbyte, i2c_sm_rxbyte_ack, i2c_sm_txbyte_ack, i2c_sm_stop_inhibit);
-   signal i2c_state : t_i2c_state;
-   signal i2c_state_check0 : t_i2c_state;
-   signal i2c_state_check1 : t_i2c_state;
-   signal i2c_slave_sda_active : std_logic;
-   signal i2c_bit_count : std_logic_vector(3 downto 0);
-   signal i2c_bit_cen : std_logic;
-   signal i2c_start : std_logic;
-   signal i2c_stop : std_logic;
-   signal i2c_start_reset : std_logic;
-   signal i2c_stop_reset : std_logic;
-   signal i2c_stop_inhibit : std_logic;
-   signal i2c_timeout_count : std_logic_vector(15 downto 0);
-   signal i2c_timeout : std_logic;
-   signal i2c_ack : std_logic;
-   signal i2c_nak : std_logic;
-
-   attribute keep of i2c_slave_addr : signal is "true";
-   attribute equivalent_register_removal of i2c_slave_addr : signal is "no";
-   attribute keep of i2c_slave_rxdata : signal is "true";
-   attribute equivalent_register_removal of i2c_slave_rxdata : signal is "no";
-   attribute keep of i2c_slave_txdata : signal is "true";
-   attribute equivalent_register_removal of i2c_slave_txdata : signal is "no";
-   attribute keep of i2c_ack : signal is "true";
-   attribute equivalent_register_removal of i2c_ack : signal is "no";
-   attribute keep of i2c_nak : signal is "true";
-   attribute equivalent_register_removal of i2c_nak : signal is "no";
-   attribute keep of i2c_stop_inhibit : signal is "true";
-   attribute equivalent_register_removal of i2c_stop_inhibit : signal is "no";
-
+   i2c_gen : if ENABLE_I2C_INTERFACE generate
    begin
-
+   
       i2c_slave_address <= wreg(reg_i2c_config)(6 downto 0);
-      i2c_stop_inhibit <= wreg(reg_i2c_config)(7);
-      
-      -- Detect start
-      process(PI_SDA)
-      begin
-         if i2c_start_reset = '1' or i2c_timeout = '1' then
-            i2c_start <= '0';
-         elsif falling_edge(PI_SDA) then
-            if PI_SCK_bufg = '1' then
-               i2c_start <= '1';
-            end if;
-         end if;
-      end process;
 
-      -- Detect stop
-      process(PI_SDA)
-      begin
-         if i2c_stop_reset = '1' or i2c_timeout = '1' then
-            i2c_stop <= '0';
-         elsif rising_edge(PI_SDA) then
-            if PI_SCK_bufg = '1' then
-               i2c_stop <= '1';
-            end if;
-         end if;
-      end process;
-      
-      i2c_stop_reset <= i2c_start;
+      i2c_switch0 : entity work.i2c_switch
+      generic map (
+         SLAVES => 5)
+      port map (
+         TIMEOUT_CLK => clk_33m,
+         I2C_STOP_INHIBIT => wreg(reg_i2c_config)(7),
 
-      -- Bit counter
-      process(PI_SCK_bufg)
-      begin
-         if i2c_bit_cen = '0' or i2c_state = i2c_sm_idle then
-            i2c_bit_count <= "0001";
-         elsif falling_edge(PI_SCK_bufg) then
-            if i2c_bit_count = "1000" then
-               i2c_bit_count <= "0001";
-            else
-               i2c_bit_count <= i2c_bit_count + 1;
-            end if;
-         end if;
-      end process;
+         -- Master
+         M_SCK => PI_SCK_bufg,
+         M_SDA => PI_SDA,
+         
+         -- Slaves
+         S_SCK(0) => EESDC,
+         S_SCK(1) => DAC_SCK,
+         S_SCK(2) => MMA_SCK,
+         S_SCK(3) => MAG_SCK,
+         S_SCK(4) => gpio1_sck0,
+         S_SDA(0) => EESDA,
+         S_SDA(1) => DAC_SDA,
+         S_SDA(2) => MMA_SDA,
+         S_SDA(3) => MAG_SDA,
+         S_SDA(4) => gpio1_sda0);
 
-      -- I2C timeout counter
-      process(clk_33m)
-      begin
-         if i2c_state = i2c_sm_idle then
-            i2c_timeout_count <= (others => '0');
-         elsif rising_edge(clk_33m) then
-            i2c_state_check0 <= i2c_state;
-            i2c_state_check1 <= i2c_state_check0;
-            if i2c_state_check0 = i2c_state_check1 then
-               i2c_timeout_count <= i2c_timeout_count + 1;
-            else
-               i2c_timeout_count <= (others => '0');
-            end if;
-         end if;
-      end process;
-
-      i2c_timeout <= '1' when i2c_timeout_count(i2c_timeout_count'high) = '1' else '0';
-
-      -- i2c tracking state machine
-      process(PI_SCK_bufg)
-      begin
-         if reset_p = '1' or (i2c_stop = '1' and i2c_state /= i2c_sm_stop_inhibit) then
-            i2c_state <= i2c_sm_idle;
-         elsif falling_edge(PI_SCK_bufg) then
-            i2c_start_reset <= '0';
-            
-            i2c_rxbuf <= i2c_rxbuf(6 downto 0) & i2c_sda;
-            i2c_txbuf <= i2c_txbuf(6 downto 0) & PI_SDA;
-            
-            -- Look for start bit
-            case i2c_state is
-               when i2c_sm_idle =>
-                  if i2c_start = '1' then
-                     i2c_state <= i2c_sm_slave_addr;
-                     i2c_bit_cen <= '1';
-                     i2c_start_reset <= '1';
-                  end if;
-               when i2c_sm_slave_addr =>
-                  if i2c_bit_count = "1000" then
-                     i2c_bit_cen <= '0';
-                     i2c_slave_addr <= i2c_rxbuf(6 downto 0);
-                     i2c_rnw <= PI_SDA;
-                     i2c_state <= i2c_sm_slave_addr_ack;
-                  end if;
-               when i2c_sm_slave_addr_ack =>
-                  if i2c_rnw = '1' then
-                     i2c_state <= i2c_sm_rxbyte;
-                     i2c_bit_cen <= '1';
-                  else
-                     i2c_state <= i2c_sm_txbyte;
-                     i2c_bit_cen <= '1';
-                  end if;
-               when i2c_sm_rxbyte =>
-                  if i2c_bit_count = "1000" then
-                     i2c_bit_cen <= '0';
-                     i2c_slave_rxdata <= i2c_rxbuf(6 downto 0) & i2c_sda;
-                     i2c_state <= i2c_sm_rxbyte_ack;
-                  end if;
-               when i2c_sm_txbyte =>
-                  if i2c_bit_count = "1000" then
-                     i2c_bit_cen <= '0';
-                     i2c_slave_txdata <= i2c_txbuf(6 downto 0) & PI_SDA;
-                     i2c_state <= i2c_sm_txbyte_ack;
-                  end if;
-               when i2c_sm_rxbyte_ack =>
-                  if i2c_stop_inhibit = '1' and PI_SDA = '0' then -- Detect AK and inhibit STOP if STOP needs to be inhibited
-                     i2c_state <= i2c_sm_stop_inhibit;
-                  else
-                     i2c_state <= i2c_sm_rxbyte;
-                     i2c_bit_cen <= '1';
-                  end if;
-               when i2c_sm_txbyte_ack =>
-                  if i2c_stop_inhibit = '1' and PI_SDA = '0' then -- Detect AK and inhibit STOP if STOP needs to be inhibited
-                     i2c_state <= i2c_sm_stop_inhibit;
-                  else
-                     i2c_state <= i2c_sm_txbyte;
-                     i2c_bit_cen <= '1';
-                  end if;
-               when i2c_sm_stop_inhibit => -- Prevent 'STOP' from propagating to slave
-                  if i2c_start = '1' then
-                     i2c_state <= i2c_sm_slave_addr;
-                     i2c_bit_cen <= '1';
-                     i2c_start_reset <= '1';
-                  end if;
-               when others => NULL;
-            end case;
-         end if;
-      end process;
-      
-      i2c_ack <= '1' when PI_SDA = '1' and PI_SCK = '1' and i2c_state = i2c_sm_txbyte_ack else '0';
-      i2c_nak <= '1' when PI_SDA = '0' and PI_SCK = '1' and i2c_state = i2c_sm_txbyte_ack else '0';
-
-      i2c_slave_sda_active <= '1' when i2c_state = i2c_sm_slave_addr_ack or
-                                      i2c_state = i2c_sm_rxbyte or
-                                      i2c_state = i2c_sm_txbyte_ack
-                                      else '0';
-
-      -- Combine all SDA lines (from input buffers)
-      i2c_sda <= DAC_SDA and MMA_SDA and MAG_SDA and EESDA;
-
-      -- Drive SDA out to PI when slave is driving SDA
-      PI_SDA <= '0' when i2c_sda = '0' and i2c_slave_sda_active = '1' else 'Z';
-      
-      -- EEPROM SCL & SDA control
-      EESDC <= PI_SCK_bufg;
-      EESDA <= '0' when PI_SDA = '0' and i2c_slave_sda_active = '0' else 'Z';
-      
-      -- DAC SCL & SDA control
-      DAC_SCK <= PI_SCK_bufg;
-      DAC_SDA <= '0' when PI_SDA = '0' and i2c_slave_sda_active = '0' else 'Z';
-
-      -- Accelerometer SCL & SDA control
-      MMA_SCK <= PI_SCK_bufg;
-      MMA_SDA <= '0' when (PI_SDA = '0' and i2c_state /= i2c_sm_stop_inhibit and i2c_slave_sda_active = '0') or
-                          (PI_SDA = '0' and i2c_state = i2c_sm_stop_inhibit and i2c_start = '1' and i2c_slave_sda_active = '0') else 'Z';
-
-      -- Magnetometer SCL & SDA control
-      MAG_SCK <= PI_SCK_bufg;
-      MAG_SDA <= '0' when PI_SDA = '0' and i2c_slave_sda_active = '0' else 'Z';
-      
-   end block;
+   end generate;
 
 
 -- ********************************************
@@ -820,6 +652,7 @@ begin
                       DAC_RDY when wreg(reg_pi_gpio_cfg1)(3 downto 2) = "11" else
                       'Z';
 
+
 -- ********************************************
 -- ***** DAC                              *****
 -- ********************************************
@@ -864,6 +697,7 @@ begin
       signal lcd_sm_state : t_lcd_sm_state;
       signal lcd_wen : std_logic;
       signal lcd_cycle_count : std_logic_vector(23 downto 0);
+      signal lcd_timing : std_logic_vector(23 downto 0); -- := X"008000";
       
 --      LCD init string
 --      constant lcd_init : t_slv16_vector(0 to 127) := (X"8FFF", X"0030", X"8FFF", X"0030", X"8002", X"0030", X"8002", X"0038",
@@ -871,11 +705,15 @@ begin
 --      VFD init string
 --      constant lcd_init : t_slv16_vector(0 to 127) := (X"8FFF", X"0030", X"8FFF", X"0030", X"8002", X"0030", X"8002", X"000C",
 --                                                       X"8002", X"0001", X"8002", X"001C", X"8002", X"8002", X"8FFF", X"8002") & (
+--    VFD Setup String
       constant lcd_init : t_slv16_vector(0 to 127) := (X"0030", X"8FFF", X"0030", X"8002", X"0030", X"8002", X"0038", X"0102",
                                                        X"8002", X"000C", X"8002", X"0001", X"8002", X"0006", X"0002", X"8FFF") & (
+--    VFD Graphic Setup String
+--      constant lcd_init : t_slv16_vector(0 to 127) := (X"021B", X"0240", X"8001", X"021B", X"0243", X"0201", X"8001", X"8001",
+--                                                       X"8001", X"8001", X"8001", X"8001", X"8001", X"8001", X"8001", X"8001") & (
                                                        -- Welcome message next...
-                                                       string_to_slv16_vector("Welcome to the PiXi-200                 Now let's get the Pi involved...                                        "));
-      --                                               string_to_slv16_vector("^234567890123456789012345678901234567890^23456789012345678901234567890123456789^12345678901234567890123456789012"));
+                                                       string_to_slv16_vector("Welcome to the PiXi-200                 Now what shall we do today?...                                          "));
+      -- Just some text to help line things up...      string_to_slv16_vector("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012"));
 
    begin
      
@@ -897,6 +735,8 @@ begin
          LEVEL => lcd_fifo_level,
          FULL => lcd_fifo_full,
          EMPTY => lcd_fifo_empty);
+      
+      lcd_timing <= X"00" & wreg(reg_vfd_ctrl)(15 downto 8) & X"00";
       
       -- LCD/VFD Output State machine
       process(clk_33m)
@@ -920,7 +760,7 @@ begin
                         else
                            lcd_sm_state <= lcd_sm_wen;
                            lcd_wen <= '1';
-                           lcd_cycle_count <= X"00000C";
+                           lcd_cycle_count <= lcd_timing;
                         end if;
                      end if;
                   else
@@ -929,7 +769,7 @@ begin
                when lcd_sm_wen => -- Write to LCD
                   if lcd_cycle_count = X"000000" then
                      lcd_wen <= '0';
-                     lcd_cycle_count <= X"00000C";
+                     lcd_cycle_count <= lcd_timing;
                      lcd_sm_state <= lcd_sm_wen_wait;
                   else
                      lcd_cycle_count <= lcd_cycle_count - 1;
@@ -1028,7 +868,7 @@ end generate;
 
    gpio1_f1(0)  <= 'Z'; -- 
    gpio1_f1(1)  <= 'Z'; --
-   gpio1_f1(2)  <= PI_SDA;
+--   gpio1_f1(2)  <= PI_SDA;
    gpio1_f1(3)  <= 'Z';
    gpio1_f1(4)  <= PI_SCK;
    gpio1_f1(5)  <= 'Z';
@@ -1053,6 +893,8 @@ end generate;
 
    gpio1_f2(11 downto 0)  <= clock_leds;
    gpio1_f2(15 downto 12) <= gpio1_kbscan_out; -- Keyboard scanner output
+   gpio1_f2(16) <= gpio1_sck0;
+   gpio1_f2(17) <= gpio1_sda0;
    gpio1_f2(19 downto 16) <= "ZZZZ";
    
    -- GPIO2 is general purpose open-collector outputs or PWM control
