@@ -1,0 +1,40 @@
+Format: 1.8
+Date: Tue, 19 Nov 2013 20:38:32 +0000
+Source: pixi-tools
+Binary: pixi-tools
+Architecture: source armhf
+Version: 0.2-1
+Distribution: unstable
+Urgency: low
+Maintainer: Simon Cantrill <simonjcantrill@gmail.com>
+Changed-By: Simon Cantrill <simonjcantrill@gmail.com>
+Description: 
+ pixi-tools - Tools for the Raspberry Pi and PiXi-200
+Changes: 
+ pixi-tools (0.2-1) unstable; urgency=low
+ .
+   * Add real debian packaging infrastructure
+     - Install into /usr instead of /usr/local.
+     - Use dh_pysupport.
+ .
+   * Many code changes:
+     - Make libpixi a shared library.
+     - Add command 'fpga-build-time'.
+     - Add command 'adc-read'.
+     - Fixes to the dynamically generated HTML.
+     - Addition of the 'Sequencer' UI.
+Checksums-Sha1: 
+ 3eb775289325343f64613f6829dc511b275c5695 785 pixi-tools_0.2-1.dsc
+ 4308f0b504bf730e36d692c4a4987f8b98b0446f 152127 pixi-tools_0.2.orig.tar.gz
+ ff9648adea3301215cd3faf7f3490d8a74a6d52f 3151 pixi-tools_0.2-1.debian.tar.gz
+ b233bb36db2d24c3b2d4bd75a3bd46b8e97367fc 1494642 pixi-tools_0.2-1_armhf.deb
+Checksums-Sha256: 
+ 02b28712cf3038b224ab56cc49b2f8f5e36ec1f03348e4c2573ff6ed9d4f689c 785 pixi-tools_0.2-1.dsc
+ 244b13b3c6c4595a292964fe1e7ca9245cb7d48629c122cac0c8fd5d8c90c0f9 152127 pixi-tools_0.2.orig.tar.gz
+ 8b6af0e56d0391202ae388699edba71b2a632f5e6c5be279f47983a687c210a2 3151 pixi-tools_0.2-1.debian.tar.gz
+ ccb125c2561e0177a1c57a0c37254ad865bf627e6c60711da7291a5a78734bef 1494642 pixi-tools_0.2-1_armhf.deb
+Files: 
+ eaff15af1bfcec33295822fd1b440082 785 misc optional pixi-tools_0.2-1.dsc
+ ff9a2eb56f76688e081b59363ca487aa 152127 misc optional pixi-tools_0.2.orig.tar.gz
+ 4501c8599a0ffb6ce148471aac474acc 3151 misc optional pixi-tools_0.2-1.debian.tar.gz
+ 8278a746216a70b18b35746269f920b8 1494642 misc optional pixi-tools_0.2-1_armhf.deb

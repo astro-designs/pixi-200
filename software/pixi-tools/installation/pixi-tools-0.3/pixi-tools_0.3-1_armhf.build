@@ -1,0 +1,950 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc -ibuild|\.git|\.project|\.cproject|\.settings
+dpkg-buildpackage: source package pixi-tools
+dpkg-buildpackage: source version 0.3-1
+dpkg-buildpackage: source changed by Simon Cantrill <simonjcantrill@gmail.com>
+ dpkg-source -ibuild|\.git|\.project|\.cproject|\.settings --before-build pixi-tools
+dpkg-buildpackage: host architecture armhf
+ fakeroot debian/rules clean
+dh clean
+   dh_testdir
+   dh_auto_clean
+make[1]: Entering directory `/usr/src/pixi/pixi-tools'
+make[2]: Entering directory `/usr/src/pixi/pixi-tools/build/release'
+rm -f lib/libpixi.so lib/pixisim.so bin/pio python-site/_pi.so python-site/_pixi.so share/pixi-tools/html/Camera.js share/pixi-tools/html/LcdPanel.js share/pixi-tools/html/Rover.js share/pixi-tools/html/Sequencer.js share/pixi-tools/html/XYController.js share/pixi-tools/html/gpio.html share/pixi-tools/html/gpio.js share/pixi-tools/html/index.html share/pixi-tools/html/index.js share/pixi-tools/html/input.html share/pixi-tools/html/input.js share/pixi-tools/html/libs/jquery-1.7.1.js share/pixi-tools/html/pixi.js share/pixi-tools/html/style.css share/pixi-tools/html/sys.html share/pixi-tools/html/sys.js libpixi/util/string.o libpixi/util/file.o libpixi/util/log.o libpixi/pi/gpio.o libpixi/pi/spi.o libpixi/pixi/adc.o libpixi/pixi/fpga.o libpixi/pixi/simple.o libpixi/pixi/lcd.o libpixi/pixi/pwm.o libpixi/pixi/gpio.o libpixi/pixi/spi.o libpixi/libpixi.o pio/adc.o pio/fpga.o pio/pio.o pio/lcd.o pio/gpio.o pio/spi.o swig/pixi.o   *.o *.lo *.la *~
+rm -rf .deps .libs
+rm -rf .deps .libs
+make[2]: Leaving directory `/usr/src/pixi/pixi-tools/build/release'
+:
+make[1]: Leaving directory `/usr/src/pixi/pixi-tools'
+   dh_clean
+ dpkg-source -ibuild|\.git|\.project|\.cproject|\.settings -b pixi-tools
+dpkg-source: info: using source format `3.0 (quilt)'
+dpkg-source: info: building pixi-tools using existing ./pixi-tools_0.3.orig.tar.gz
+dpkg-source: info: building pixi-tools in pixi-tools_0.3-1.debian.tar.gz
+dpkg-source: info: building pixi-tools in pixi-tools_0.3-1.dsc
+ debian/rules build
+make: `build' is up to date.
+ fakeroot debian/rules binary
+dh binary
+   dh_testdir
+   dh_auto_configure
+   debian/rules override_dh_auto_build
+make[1]: Entering directory `/usr/src/pixi/pixi-tools'
+/usr/bin/make -j4 all doc
+make[2]: Entering directory `/usr/src/pixi/pixi-tools'
+make[3]: Entering directory `/usr/src/pixi/pixi-tools/build/release'
+  CC      libpixi/util/string.o
+  CC      libpixi/util/file.o
+  CC      libpixi/util/log.o
+  CC      libpixi/pi/gpio.o
+  CC      libpixi/pi/spi.o
+  CC      libpixi/pixi/adc.o
+  CC      libpixi/pixi/fpga.o
+  CC      libpixi/pixi/simple.o
+  CC      libpixi/pixi/lcd.o
+  CC      libpixi/pixi/pwm.o
+  CC      libpixi/pixi/gpio.o
+  CC      libpixi/pixi/spi.o
+  CC      libpixi/libpixi.o
+  CC      pixisim/pixisim.o
+  CC      pio/adc.o
+  CC      pio/fpga.o
+  CC      pio/pio.o
+  CC      pio/lcd.o
+  CC      pio/gpio.o
+  CC      pio/spi.o
+  SWIG    swig/pi.c
+  SWIG    swig/pixi.c
+  CP      share/pixi-tools/html/Camera.js
+  CP      share/pixi-tools/html/LcdPanel.js
+  CP      share/pixi-tools/html/Rover.js
+  CP      share/pixi-tools/html/Sequencer.js
+  CP      share/pixi-tools/html/XYController.js
+  SUBST   share/pixi-tools/html/gpio.html
+  CP      share/pixi-tools/html/gpio.js
+  SUBST   share/pixi-tools/html/index.html
+  CP      share/pixi-tools/html/index.js
+  SUBST   share/pixi-tools/html/input.html
+  CP      share/pixi-tools/html/input.js
+  CP      share/pixi-tools/html/libs/jquery-1.7.1.js
+  CP      share/pixi-tools/html/pixi.js
+  CP      share/pixi-tools/html/style.css
+  SUBST   share/pixi-tools/html/sys.html
+  CP      share/pixi-tools/html/sys.js
+share/pixi-tools/html/api
+  LINK    lib/libpixi.so
+  LINK    lib/pixisim.so
+  LINK    bin/pio
+  CC      swig/pi.o
+  CC      swig/pixi.o
+swig/pixi.c:4867:1: warning: no previous prototype for ‘init_pixi’ [-Wmissing-prototypes]
+swig/pixi.c: In function ‘init_pixi’:
+swig/pixi.c:4868:21: warning: variable ‘md’ set but not used [-Wunused-but-set-variable]
+swig/pi.c:5446:1: warning: no previous prototype for ‘init_pi’ [-Wmissing-prototypes]
+/usr/src/pixi/pixi-tools/libpixi/pixi/gpio.h:44: warning: The following parameters of pixi_pixiGpioSetMode(uint gpio, PixiGpioMode mode) are not documented:
+  parameter 'mode'
+/usr/src/pixi/pixi-tools/libpixi/pixi/gpio.h:49: warning: The following parameters of pixi_pixiGpioSetPinMode(SpiDevice *spi, uint gpioController, uint pin, uint mode) are not documented:
+  parameter 'spi'
+  parameter 'mode'
+
+(process:3370): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3369): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3372): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3374): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3378): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3377): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3380): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3382): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3384): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3386): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3388): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3390): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3392): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3394): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3398): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3397): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3400): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3402): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3404): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3406): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3409): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3412): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3413): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3415): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+  LINK    python-site/_pixi.so
+
+(process:3423): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3426): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3427): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3429): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3432): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3433): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3435): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3437): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3439): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3441): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3443): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+  LINK    python-site/_pi.so
+
+(process:3446): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3454): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3456): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3458): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3460): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3462): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3464): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3466): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3468): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3470): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3472): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3474): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3476): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3478): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3480): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3482): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3484): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3486): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3488): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3490): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3492): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3494): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3496): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3498): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3500): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3502): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3504): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3506): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3508): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3510): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3512): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3514): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3516): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3518): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3520): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3522): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3524): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3526): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3528): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3530): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3532): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3535): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3536): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3538): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3540): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3542): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3544): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3546): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3548): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3550): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3552): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3554): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3556): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3558): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3560): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3562): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3564): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3567): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3568): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3571): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3572): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3575): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3576): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3579): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3580): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3583): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3584): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3586): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3589): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3590): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3593): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3595): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3597): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3599): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3601): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3603): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3605): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3607): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3609): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3611): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3613): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3615): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3617): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3619): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3621): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3623): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3626): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3627): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3630): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3631): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3634): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3635): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3638): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3639): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3642): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3643): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3646): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3647): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3649): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3651): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3653): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3655): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3658): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3659): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3662): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3663): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3666): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3667): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3670): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3671): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3674): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3675): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3678): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3679): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3681): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+
+(process:3683): Pango-WARNING **: error opening config file '/root/.pangorc': Permission denied
+
+make[3]: Leaving directory `/usr/src/pixi/pixi-tools/build/release'
+:
+:
+make[2]: Leaving directory `/usr/src/pixi/pixi-tools'
+make[1]: Leaving directory `/usr/src/pixi/pixi-tools'
+   debian/rules override_dh_auto_test
+make[1]: Entering directory `/usr/src/pixi/pixi-tools'
+/usr/bin/make check
+make[2]: Entering directory `/usr/src/pixi/pixi-tools'
+make[3]: Entering directory `/usr/src/pixi/pixi-tools/build/release'
+make install-purepython install-python prefix=/usr/src/pixi/pixi-tools/build/release
+make[4]: Entering directory `/usr/src/pixi/pixi-tools/build/release'
+installing pure python modules
+running install
+running build
+running build_py
+creating build/python-setup
+creating build/python-setup/lib.linux-armv6l-2.7
+creating build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/httpd.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/commands.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/__init__.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/test.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/rover.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/pixix.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+running build_scripts
+creating build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-demo -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-rover -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-monitor -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-server -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-echo -> build/python-setup/scripts-2.7
+changing mode of build/python-setup/scripts-2.7/pixi-demo from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-rover from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-monitor from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-server from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-echo from 644 to 755
+running install_lib
+creating /usr/src/pixi/pixi-tools/build/release/lib/python2.7
+creating /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages
+creating /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/httpd.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/commands.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/__init__.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/test.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/rover.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/pixix.py -> /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/httpd.py to httpd.pyc
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py to commands.pyc
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/__init__.py to __init__.pyc
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/test.py to test.pyc
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/rover.py to rover.pyc
+byte-compiling /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/pixix.py to pixix.pyc
+running install_scripts
+copying build/python-setup/scripts-2.7/pixi-demo -> /usr/src/pixi/pixi-tools/build/release/bin
+copying build/python-setup/scripts-2.7/pixi-rover -> /usr/src/pixi/pixi-tools/build/release/bin
+copying build/python-setup/scripts-2.7/pixi-monitor -> /usr/src/pixi/pixi-tools/build/release/bin
+copying build/python-setup/scripts-2.7/pixi-server -> /usr/src/pixi/pixi-tools/build/release/bin
+copying build/python-setup/scripts-2.7/pixi-echo -> /usr/src/pixi/pixi-tools/build/release/bin
+changing mode of /usr/src/pixi/pixi-tools/build/release/bin/pixi-demo to 755
+changing mode of /usr/src/pixi/pixi-tools/build/release/bin/pixi-rover to 755
+changing mode of /usr/src/pixi/pixi-tools/build/release/bin/pixi-monitor to 755
+changing mode of /usr/src/pixi/pixi-tools/build/release/bin/pixi-server to 755
+changing mode of /usr/src/pixi/pixi-tools/build/release/bin/pixi-echo to 755
+running install_egg_info
+Writing /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixi_tools-0.0.0-py2.7.egg-info
+pylibdir is firstly /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages, then /usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages
+installing python modules
+`python-site/_pi.so' -> `/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/_pi.so'
+`python-site/_pixi.so' -> `/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/_pixi.so'
+`python-site/pi.py' -> `/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/pi.py'
+`python-site/pixi.py' -> `/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/pixi.py'
+make[4]: Leaving directory `/usr/src/pixi/pixi-tools/build/release'
+PYTHONPATH=/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages LD_LIBRARY_PATH=/usr/src/pixi/pixi-tools/build/release/lib python -m pixitools.test --verbose
+ERROR: ld.so: object 'libfakeroot-sysv.so' from LD_PRELOAD cannot be preloaded: ignored.
+test_core (__main__.TestLib) ... INFO:__main__:Loaded: <module 'pixitools.pi' from '/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/pi.py'>
+INFO:__main__:Loaded: <module '_pi' from '/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/_pi.so'>
+INFO:__main__:Loaded: <module 'pixitools.pixi' from '/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/pixi.py'>
+INFO:__main__:Loaded: <module '_pixi' from '/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/_pixi.so'>
+INFO:__main__:libpixi version: 0.3
+ok
+INFO:__main__:Setting up Server on port 9980
+test_core (__main__.TestServer) ... INFO:pixitools.httpd:client_address: ('127.0.0.1', 47573)
+INFO:pixitools.httpd:Incoming command: [getLibVersion]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47574)
+INFO:pixitools.httpd:Incoming command: [getPiBoardRevision]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47575)
+INFO:pixitools.httpd:Incoming command: [getPiBoardVersion]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47576)
+INFO:pixitools.httpd:Incoming command: [getCommands]
+INFO:__main__:Response status=200, reason=OK
+ok
+test_readWriteData (__main__.TestServer) ... INFO:pixitools.httpd:client_address: ('127.0.0.1', 47577)
+INFO:pixitools.httpd:Incoming command: [writeData]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47578)
+INFO:pixitools.httpd:Incoming command: [writeData]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47579)
+INFO:pixitools.httpd:Incoming command: [listDataGroup]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47580)
+INFO:pixitools.httpd:Incoming command: [readData]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47581)
+INFO:pixitools.httpd:Incoming command: [readData]
+INFO:__main__:Response status=200, reason=OK
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47582)
+INFO:pixitools.httpd:Incoming command: [writeData]
+ERROR:pixitools.httpd:exception handling command
+Traceback (most recent call last):
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/httpd.py", line 77, in handleCommand
+    result = processCommand (command)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 209, in processCommand
+    return method (**params)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 157, in writeData
+    validateNameParam ("group", group)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 151, in validateNameParam
+    raise CommandError ("Invalid name string for " + paramName)
+CommandError: Invalid name string for group
+INFO:__main__:Response status=500, reason=Internal Server Error
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47583)
+INFO:pixitools.httpd:Incoming command: [writeData]
+ERROR:pixitools.httpd:exception handling command
+Traceback (most recent call last):
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/httpd.py", line 77, in handleCommand
+    result = processCommand (command)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 209, in processCommand
+    return method (**params)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 157, in writeData
+    validateNameParam ("group", group)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 151, in validateNameParam
+    raise CommandError ("Invalid name string for " + paramName)
+CommandError: Invalid name string for group
+INFO:__main__:Response status=500, reason=Internal Server Error
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47584)
+INFO:pixitools.httpd:Incoming command: [writeData]
+ERROR:pixitools.httpd:exception handling command
+Traceback (most recent call last):
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/httpd.py", line 77, in handleCommand
+    result = processCommand (command)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 209, in processCommand
+    return method (**params)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 158, in writeData
+    validateNameParam ("name", name)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 151, in validateNameParam
+    raise CommandError ("Invalid name string for " + paramName)
+CommandError: Invalid name string for name
+INFO:__main__:Response status=500, reason=Internal Server Error
+INFO:pixitools.httpd:client_address: ('127.0.0.1', 47585)
+INFO:pixitools.httpd:Incoming command: [writeData]
+ERROR:pixitools.httpd:exception handling command
+Traceback (most recent call last):
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/httpd.py", line 77, in handleCommand
+    result = processCommand (command)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 209, in processCommand
+    return method (**params)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 158, in writeData
+    validateNameParam ("name", name)
+  File "/usr/src/pixi/pixi-tools/build/release/lib/python2.7/site-packages/pixitools/commands.py", line 151, in validateNameParam
+    raise CommandError ("Invalid name string for " + paramName)
+CommandError: Invalid name string for name
+INFO:__main__:Response status=500, reason=Internal Server Error
+ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.682s
+
+OK
+cd /usr/src/pixi/pixi-tools && tools/check-headers
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/string.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/file.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/log.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/libpixi.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/gpio.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/spi.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/simple.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/fpga.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/gpio.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/lcd.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/pwm.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/registers.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/spi.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/adc.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/private/version.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/common.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/Command.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/common.h>
+gcc -std=gnu89  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/log.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/string.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/file.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/log.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/libpixi.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/gpio.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/spi.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/simple.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/fpga.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/gpio.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/lcd.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/pwm.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/registers.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/spi.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/adc.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/private/version.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/common.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/Command.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/common.h>
+gcc -std=c99 -pedantic  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/log.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/string.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/file.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/util/log.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/libpixi.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/gpio.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pi/spi.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/simple.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/fpga.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/gpio.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/lcd.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/pwm.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/registers.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/spi.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/pixi/adc.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/private/version.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <libpixi/common.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/Command.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/common.h>
+gcc -xc++ -std=gnu++98  -Wfatal-errors -Wall -Wextra -I. -fsyntax-only: #include <pio/log.h>
+make[3]: Leaving directory `/usr/src/pixi/pixi-tools/build/release'
+:
+make[2]: Leaving directory `/usr/src/pixi/pixi-tools'
+make[1]: Leaving directory `/usr/src/pixi/pixi-tools'
+   dh_testroot
+   dh_prep
+   dh_installdirs
+   debian/rules override_dh_auto_install
+make[1]: Entering directory `/usr/src/pixi/pixi-tools'
+/usr/bin/make DESTDIR=$(pwd)/debian/pixi-tools prefix=/usr install
+make[2]: Entering directory `/usr/src/pixi/pixi-tools'
+make[3]: Entering directory `/usr/src/pixi/pixi-tools/build/release'
+installing libraries
+`lib/libpixi.so' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/libpixi.so.0'
+installing headers
+mkdir: created directory `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include'
+mkdir: created directory `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi'
+mkdir: created directory `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/util'
+`libpixi/util/string.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/util/string.h'
+`libpixi/util/file.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/util/file.h'
+`libpixi/util/log.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/util/log.h'
+`libpixi/libpixi.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/libpixi.h'
+mkdir: created directory `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pi'
+`libpixi/pi/gpio.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pi/gpio.h'
+`libpixi/pi/spi.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pi/spi.h'
+mkdir: created directory `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi'
+`libpixi/pixi/simple.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/simple.h'
+`libpixi/pixi/fpga.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/fpga.h'
+`libpixi/pixi/gpio.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/gpio.h'
+`libpixi/pixi/lcd.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/lcd.h'
+`libpixi/pixi/pwm.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/pwm.h'
+`libpixi/pixi/registers.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/registers.h'
+`libpixi/pixi/spi.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/spi.h'
+`libpixi/pixi/adc.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/pixi/adc.h'
+`libpixi/common.h' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/include/libpixi/common.h'
+installing executables
+`bin/pio' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pio'
+pylibdir is firstly /usr/lib/python2.7/dist-packages, then /usr/lib/python2.7/dist-packages
+installing python modules
+`python-site/_pi.so' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/dist-packages/pixitools/_pi.so'
+`python-site/_pixi.so' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/dist-packages/pixitools/_pixi.so'
+`python-site/pi.py' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/dist-packages/pixitools/pi.py'
+`python-site/pixi.py' -> `/usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/dist-packages/pixitools/pixi.py'
+installing pure python modules
+running install
+running build
+running build_py
+creating build/python-setup
+creating build/python-setup/lib.linux-armv6l-2.7
+creating build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/httpd.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/commands.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/__init__.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/test.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/rover.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+copying python/lib/pixi/pixix.py -> build/python-setup/lib.linux-armv6l-2.7/pixitools
+running build_scripts
+creating build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-demo -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-rover -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-monitor -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-server -> build/python-setup/scripts-2.7
+copying and adjusting python/scripts/pixi-echo -> build/python-setup/scripts-2.7
+changing mode of build/python-setup/scripts-2.7/pixi-demo from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-rover from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-monitor from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-server from 644 to 755
+changing mode of build/python-setup/scripts-2.7/pixi-echo from 644 to 755
+running install_lib
+creating /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages
+creating /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/httpd.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/commands.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/__init__.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/test.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/rover.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+copying build/python-setup/lib.linux-armv6l-2.7/pixitools/pixix.py -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/httpd.py to httpd.pyc
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/commands.py to commands.pyc
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/__init__.py to __init__.pyc
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/test.py to test.pyc
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/rover.py to rover.pyc
+byte-compiling /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixitools/pixix.py to pixix.pyc
+running install_scripts
+copying build/python-setup/scripts-2.7/pixi-demo -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin
+copying build/python-setup/scripts-2.7/pixi-rover -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin
+copying build/python-setup/scripts-2.7/pixi-monitor -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin
+copying build/python-setup/scripts-2.7/pixi-server -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin
+copying build/python-setup/scripts-2.7/pixi-echo -> /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin
+changing mode of /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pixi-demo to 755
+changing mode of /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pixi-rover to 755
+changing mode of /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pixi-monitor to 755
+changing mode of /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pixi-server to 755
+changing mode of /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/bin/pixi-echo to 755
+running install_egg_info
+Writing /usr/src/pixi/pixi-tools/debian/pixi-tools/usr/lib/python2.7/site-packages/pixi_tools-0.0.0-py2.7.egg-info
+installing general files
+make[3]: Leaving directory `/usr/src/pixi/pixi-tools/build/release'
+:
+make[2]: Leaving directory `/usr/src/pixi/pixi-tools'
+make[1]: Leaving directory `/usr/src/pixi/pixi-tools'
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_installexamples
+   dh_installman
+   dh_installcatalogs
+   dh_installcron
+   dh_installdebconf
+   dh_installemacsen
+   dh_installifupdown
+   dh_installinfo
+   dh_pysupport
+dh_pysupport: This program is deprecated, you should use dh_python2 instead. Migration guide: http://deb.li/dhs2p
+   dh_installinit
+   dh_installmenu
+   dh_installmime
+   dh_installmodules
+   dh_installlogcheck
+   dh_installlogrotate
+   dh_installpam
+   dh_installppp
+   dh_installudev
+   dh_installwm
+   dh_installxfonts
+   dh_installgsettings
+   dh_bugfiles
+   dh_ucf
+   dh_lintian
+   dh_gconf
+   dh_icons
+   dh_perl
+   debian/rules override_dh_usrlocal
+make[1]: Entering directory `/usr/src/pixi/pixi-tools'
+true
+make[1]: Leaving directory `/usr/src/pixi/pixi-tools'
+   dh_link
+   dh_compress
+   dh_fixperms
+   dh_strip
+   dh_makeshlibs
+   dh_shlibdeps
+   dh_installdeb
+   dh_gencontrol
+dpkg-gencontrol: warning: package pixi-tools: unused substitution variable ${python:Versions}
+dpkg-gencontrol: warning: package pixi-tools: unused substitution variable ${python:Depends}
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package `pixi-tools' in `../pixi-tools_0.3-1_armhf.deb'.
+ dpkg-genchanges  >../pixi-tools_0.3-1_armhf.changes
+dpkg-genchanges: including full source code in upload
+ dpkg-source -ibuild|\.git|\.project|\.cproject|\.settings --after-build pixi-tools
+dpkg-buildpackage: full upload (original source is included)
+Now running lintian...
+W: pixi-tools source: out-of-date-standards-version 3.9.2 (current is 3.9.4)
+W: pixi-tools: package-name-doesnt-match-sonames libpixi0
+W: pixi-tools: hardening-no-relro usr/bin/pio
+W: pixi-tools: hardening-no-fortify-functions usr/bin/pio
+W: pixi-tools: hardening-no-relro usr/lib/libpixi.so.0
+W: pixi-tools: hardening-no-fortify-functions usr/lib/libpixi.so.0
+W: pixi-tools: hardening-no-relro usr/lib/pyshared/python2.7/pixitools/_pi.so
+W: pixi-tools: hardening-no-relro usr/lib/pyshared/python2.7/pixitools/_pixi.so
+W: pixi-tools: embedded-javascript-library usr/share/pixi-tools/html/api/html/jquery.js
+E: pixi-tools: missing-dependency-on-python-support python-support (>= 0.90)
+W: pixi-tools: binary-without-manpage usr/bin/pio
+W: pixi-tools: binary-without-manpage usr/bin/pixi-demo
+W: pixi-tools: binary-without-manpage usr/bin/pixi-echo
+W: pixi-tools: binary-without-manpage usr/bin/pixi-monitor
+W: pixi-tools: binary-without-manpage usr/bin/pixi-rover
+W: pixi-tools: binary-without-manpage usr/bin/pixi-server
+E: pixi-tools: python-script-but-no-python-dep usr/bin/pixi-demo
+E: pixi-tools: python-script-but-no-python-dep usr/bin/pixi-echo
+E: pixi-tools: python-script-but-no-python-dep usr/bin/pixi-monitor
+E: pixi-tools: python-script-but-no-python-dep usr/bin/pixi-rover
+E: pixi-tools: python-script-but-no-python-dep usr/bin/pixi-server
+W: pixi-tools: non-dev-pkg-with-shlib-symlink usr/lib/libpixi.so.0 usr/lib/libpixi.so
+Finished running lintian.

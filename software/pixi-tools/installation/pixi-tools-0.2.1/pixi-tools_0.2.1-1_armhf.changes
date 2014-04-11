@@ -1,0 +1,39 @@
+Format: 1.8
+Date: Sun, 08 Dec 2013 16:33:23 +0000
+Source: pixi-tools
+Binary: pixi-tools
+Architecture: source armhf
+Version: 0.2.1-1
+Distribution: unstable
+Urgency: low
+Maintainer: Simon Cantrill <simonjcantrill@gmail.com>
+Changed-By: Simon Cantrill <simonjcantrill@gmail.com>
+Description: 
+ pixi-tools - Tools for the Raspberry Pi and PiXi-200
+Changes: 
+ pixi-tools (0.2.1-1) unstable; urgency=low
+ .
+   * Improvements to existing APIs
+ .
+   * Add libpixi/pixi/simple.h API
+ .
+   * Improvements to server pages
+ .
+   * Add rover.c as an example extension
+ .
+   * Add pixisim library as a crude simulator
+Checksums-Sha1: 
+ ef6dc8f9a73d6c79af4a480eca11e36df91288d4 799 pixi-tools_0.2.1-1.dsc
+ b0a66e7a17d869f0e420c464b258134518a7c398 155025 pixi-tools_0.2.1.orig.tar.gz
+ 7bcbaf8301eec76680db505cab638b8ba39e1899 3212 pixi-tools_0.2.1-1.debian.tar.gz
+ 1d4d9345aaf669007fd40434d3e82f9a93c6ce3b 1611206 pixi-tools_0.2.1-1_armhf.deb
+Checksums-Sha256: 
+ 7e554daf61cfa00ba62b6e5db40e6807bbb10bb9c2004c80295a88bdb0e69549 799 pixi-tools_0.2.1-1.dsc
+ 98dcf4017906730d9989ba60fa2c251a9b58a4ff4604d0329fe0785a26b67dbf 155025 pixi-tools_0.2.1.orig.tar.gz
+ d66be61cf73597cdd290605875c552ff24b570c4ee8ced85aeb38ce57bfc75a1 3212 pixi-tools_0.2.1-1.debian.tar.gz
+ 2080300ca97443b278071e4713699c853fc243f39a8698b4d9c81fbb419891c8 1611206 pixi-tools_0.2.1-1_armhf.deb
+Files: 
+ 97bfe4d83e10ee4065d0c7cf28fdb15d 799 misc optional pixi-tools_0.2.1-1.dsc
+ 2cd07ae1e10d78288b07a347edf0a9f9 155025 misc optional pixi-tools_0.2.1.orig.tar.gz
+ fde8e430aa3919f5129d848fc5d6603a 3212 misc optional pixi-tools_0.2.1-1.debian.tar.gz
+ f0ac839f10cb3f04669318ecd29c1efe 1611206 misc optional pixi-tools_0.2.1-1_armhf.deb

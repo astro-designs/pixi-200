@@ -1,0 +1,93 @@
+ dpkg-buildpackage -rfakeroot -D -us -uc
+dpkg-buildpackage: source package pixi-fpga
+dpkg-buildpackage: source version 0.1-1
+dpkg-buildpackage: source changed by Simon Cantrill <simon@orbiter.home>
+ dpkg-source --before-build pixi-fpga
+dpkg-buildpackage: host architecture armhf
+ fakeroot debian/rules clean
+dh clean
+   dh_testdir
+   dh_auto_clean
+   dh_clean
+ dpkg-source -b pixi-fpga
+dpkg-source: info: using source format `3.0 (quilt)'
+dpkg-source: info: building pixi-fpga using existing ./pixi-fpga_0.1.orig.tar.gz
+dpkg-source: info: building pixi-fpga in pixi-fpga_0.1-1.debian.tar.gz
+dpkg-source: info: building pixi-fpga in pixi-fpga_0.1-1.dsc
+ debian/rules build
+dh build
+   dh_testdir
+   dh_auto_configure
+   dh_auto_build
+make[1]: Entering directory `/mnt/extra/develop/projects/pixi-fpga'
+make[1]: Leaving directory `/mnt/extra/develop/projects/pixi-fpga'
+   debian/rules override_dh_auto_test
+make[1]: Entering directory `/mnt/extra/develop/projects/pixi-fpga'
+make[1]: Leaving directory `/mnt/extra/develop/projects/pixi-fpga'
+ fakeroot debian/rules binary
+dh binary
+   dh_testroot
+   dh_prep
+   dh_installdirs
+   debian/rules override_dh_auto_install
+make[1]: Entering directory `/mnt/extra/develop/projects/pixi-fpga'
+/usr/bin/make DESTDIR=$(pwd)/debian/pixi-fpga prefix=/usr install
+make[2]: Entering directory `/mnt/extra/develop/projects/pixi-fpga'
+installing FPGA images
+`pixi.bin' -> `/mnt/extra/develop/projects/pixi-fpga/debian/pixi-fpga/usr/share/pixi-tools/fpga/pixi.bin'
+make[2]: Leaving directory `/mnt/extra/develop/projects/pixi-fpga'
+make[1]: Leaving directory `/mnt/extra/develop/projects/pixi-fpga'
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_installexamples
+   dh_installman
+   dh_installcatalogs
+   dh_installcron
+   dh_installdebconf
+   dh_installemacsen
+   dh_installifupdown
+   dh_installinfo
+   dh_pysupport
+dh_pysupport: This program is deprecated, you should use dh_python2 instead. Migration guide: http://deb.li/dhs2p
+   dh_installinit
+   dh_installmenu
+   dh_installmime
+   dh_installmodules
+   dh_installlogcheck
+   dh_installlogrotate
+   dh_installpam
+   dh_installppp
+   dh_installudev
+   dh_installwm
+   dh_installxfonts
+   dh_installgsettings
+   dh_bugfiles
+   dh_ucf
+   dh_lintian
+   dh_gconf
+   dh_icons
+   dh_perl
+   dh_usrlocal
+   dh_link
+   dh_compress
+   dh_fixperms
+   dh_installdeb
+   dh_gencontrol
+dpkg-gencontrol: warning: Depends field of package pixi-fpga: unknown substitution variable ${shlibs:Depends}
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package `pixi-fpga' in `../pixi-fpga_0.1-1_all.deb'.
+ dpkg-genchanges  >../pixi-fpga_0.1-1_armhf.changes
+dpkg-genchanges: including full source code in upload
+ dpkg-source --after-build pixi-fpga
+dpkg-buildpackage: full upload (original source is included)
+Now running lintian...
+W: pixi-fpga source: changelog-should-mention-nmu
+W: pixi-fpga source: source-nmu-has-incorrect-version-number 0.1-1
+W: pixi-fpga source: out-of-date-standards-version 3.9.2 (current is 3.9.4)
+W: pixi-fpga: wrong-bug-number-in-closes l3:#XXXXXX
+W: pixi-fpga: new-package-should-close-itp-bug
+W: pixi-fpga: copyright-without-copyright-notice
+E: pixi-fpga: extended-description-is-empty
+Finished running lintian.

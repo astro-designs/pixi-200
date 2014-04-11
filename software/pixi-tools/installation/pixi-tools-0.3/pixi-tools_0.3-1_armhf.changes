@@ -1,0 +1,33 @@
+Format: 1.8
+Date: Mon, 17 Feb 2014 06:44:59 +0000
+Source: pixi-tools
+Binary: pixi-tools
+Architecture: source armhf
+Version: 0.3-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Simon Cantrill <simonjcantrill@gmail.com>
+Changed-By: Simon Cantrill <simonjcantrill@gmail.com>
+Description: 
+ pixi-tools - Tools for the Raspberry Pi and PiXi-200
+Changes: 
+ pixi-tools (0.3-1) unstable; urgency=medium
+ .
+   * Configurable UI, with additional capabilities
+ .
+   * Support for /etc/pixi-init startup hook
+Checksums-Sha1: 
+ 036372c3c0b137be4b495a5ce86afca8512005aa 785 pixi-tools_0.3-1.dsc
+ e94567f7235015a86bff101482b809d8057b5677 158732 pixi-tools_0.3.orig.tar.gz
+ a6b622deface51c10156a5348d10b01b799b6b01 3360 pixi-tools_0.3-1.debian.tar.gz
+ 6a470a3c906ce7e15e6bba585885088a89ec1f6b 1635456 pixi-tools_0.3-1_armhf.deb
+Checksums-Sha256: 
+ 4dddf767998f779d34763fd7e7f69f4ba142e3f37dba1265280d177673124a26 785 pixi-tools_0.3-1.dsc
+ 5e1791554e2f1432e902f956dc33d84225836fc409d86bc9f6b16268a27d1fc8 158732 pixi-tools_0.3.orig.tar.gz
+ a3139ae06cf50ae23e8d0c4b7aab2aea1c3b8517bd52f5f58097c75e82aa941b 3360 pixi-tools_0.3-1.debian.tar.gz
+ 99ea0b3760c520f10b2b65f1caeca114e1536c947474d544831a703393d8d380 1635456 pixi-tools_0.3-1_armhf.deb
+Files: 
+ 8fa4255940aaa1b331bc7b063eab56a4 785 misc optional pixi-tools_0.3-1.dsc
+ a38beca8ebe066bbd670c529ffc4416f 158732 misc optional pixi-tools_0.3.orig.tar.gz
+ 2953f4c62bcfbaa30449188ddc18183d 3360 misc optional pixi-tools_0.3-1.debian.tar.gz
+ a781844d8de7417245eee4690e3c06e6 1635456 misc optional pixi-tools_0.3-1_armhf.deb
